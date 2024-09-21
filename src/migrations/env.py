@@ -5,9 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from backendCourse.src.config import settings
-from backendCourse.src.database import Base
-from backendCourse.src.models.hotels import HotelsOrm
+from src.config import settings
+from src.database import Base
+from src.models.hotels import HotelsOrm
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
