@@ -65,14 +65,14 @@ async def create_hotel(
                 "summary": "Сочи",
                 "value": {
                     "title": "Sochi Hotel",
-                    "location": "Mira st. 5",
+                    "location": "Sochi citi, Mira st. 5",
                 },
             },
             "2": {
                 "summary": "Дубай",
                 "value": {
-                    "title": "Отель Дубай У фонтана",
-                    "location": "dubai_fountain",
+                    "title": "Dubai Hotel",
+                    "location": "Sheikh Zayed Road Dubai, United Arab Emirates",
                 },
             },
         }
