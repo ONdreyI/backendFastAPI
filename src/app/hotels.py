@@ -59,22 +59,22 @@ async def create_hotel(
             "1": {
                 "summary": "Сочи",
                 "value": {
-                    "title": "Отель Сочи 5 звезд у моря",
-                    "name": "sochi_u_morya",
+                    "title": "Sochi Hotel",
+                    "location": "Mira st. 5",
                 },
             },
             "2": {
                 "summary": "Дубай",
                 "value": {
                     "title": "Отель Дубай У фонтана",
-                    "name": "dubai_fountain",
+                    "location": "dubai_fountain",
                 },
             },
         }
     )
 ):
     async with async_session_maker() as session:
-        add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dumb())
+        add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dump())
         await session.execute(add_hotel_stmt)
         await session.commit()
 
