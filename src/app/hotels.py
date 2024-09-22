@@ -76,6 +76,7 @@ async def create_hotel(
     async with async_session_maker() as session:
         add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dumb())
         await session.execute(add_hotel_stmt)
+        await session.commit()
 
 
 
