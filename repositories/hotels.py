@@ -1,4 +1,4 @@
-from base import BaseRepository
+from repositories.base import BaseRepository
 from src.models.hotels import HotelsOrm
 
 class HotelsRepository(BaseRepository):
