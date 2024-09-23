@@ -1,5 +1,5 @@
 from repositories.base import BaseRepository
-from sqlalchemy import func, select
+from sqlalchemy import func, select, insert
 from src.models.hotels import HotelsOrm
 
 
@@ -26,4 +26,12 @@ class HotelsRepository(BaseRepository):
         print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
 
+        return result.scalars().all()
+
+    async def post_object(
+        self,
+        hotel_data,
+    ):
+        query = insert(self.model).values(hotel_data.model_dump())
+        result = await self.session.execute(query)
         return result.scalars().all()
