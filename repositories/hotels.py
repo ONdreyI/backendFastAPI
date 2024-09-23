@@ -28,6 +28,7 @@ class HotelsRepository(BaseRepository):
 
         return result.scalars().all()
 
+
     async def post_object(
         self,
         hotel_data,
