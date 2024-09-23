@@ -27,3 +27,12 @@ class HotelsRepository(BaseRepository):
         result = await self.session.execute(query)
 
         return result.scalars().all()
+
+
+    async def post_object(
+        self,
+        hotel_data,
+    ):
+        query = insert(self.model).values(hotel_data.model_dump())
+        result = await self.session.execute(query)
+        return result.scalars().all()
