@@ -1,5 +1,5 @@
 from repositories.base import BaseRepository
-from sqlalchemy import func, select
+from sqlalchemy import func, select, insert
 from src.models.hotels import HotelsOrm
 
 

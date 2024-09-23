@@ -9,7 +9,7 @@ from src.models.hotels import HotelsOrm
 
 from src.database import engine
 
-from repositories.hotels import HotelsRepository
+from backendCourse.repositories.hotels import HotelsRepository
 
 router = APIRouter(
     prefix="/hotels",
@@ -58,7 +58,7 @@ async def create_hotel(
                 "summary": "Сочи",
                 "value": {
                     "title": "Sochi Hotel",
-                    "location": "Sochi citi, Mira st. 5",
+                    "location": "Sochi city, Mira st. 5",
                 },
             },
             "2": {
@@ -72,10 +72,10 @@ async def create_hotel(
     )
 ):
     async with async_session_maker() as session:
-        add_hotel_stmt = insert(HotelsOrm).values(**hotel_data.model_dump())
-        print(add_hotel_stmt.compile(engine, compile_kwargs={"literal_binds": True}))
-        await session.execute(add_hotel_stmt)
+        hotel = await HotelsRepository(session).add(hotel_data)
         await session.commit()
+
+    return {"status": "OK", "data": hotel}
 
 
 @router.put("/{hotel_id}")
