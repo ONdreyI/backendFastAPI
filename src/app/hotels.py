@@ -27,7 +27,7 @@ hotels = [
 ]
 
 
-@router.get("")
+@router.get("", name="Получение списка отелей по сортировке")
 async def get_hotels(
     pagination: PaginationDep,
     title: str | None = Query(None, description="Название отеля"),
@@ -43,7 +43,7 @@ async def get_hotels(
         )
 
 
-@router.get("/{hotel_id}")
+@router.get("/{hotel_id}", name="Получение одного отеля")
 async def get_hotel(hotel_id: int):
     async with async_session_maker() as session:
         hotel = await HotelsRepository(session).get_one_or_none(id=hotel_id)
