@@ -44,10 +44,11 @@ async def get_hotels(
 
 
 @router.delete("/{hotel_id}")
-def delete_hotel(hotel_id: int):
-    global hotels
-    hotels = [hotel for hotel in hotels if hotel["id"] != hotel_id]
-    return {"status": "deleted"}
+async def delete_hotel(hotel_id: int):
+    async with async_session_maker() as session:
+        await HotelsRepository(session).delete_data(id=hotel_id)
+        await session.commit()
+        return {"status": "deleted"}
 
 
 @router.post("")
@@ -79,11 +80,11 @@ async def create_hotel(
 
 
 @router.put("/{hotel_id}")
-def put_hotel(hotel_id: int, hotel_data: Hotel):
-    global hotels
-    for hotel in hotels:
-        if hotel["id"] == hotel_id:
-            hotel["title"] = hotel_data.title
+async def put_hotel(hotel_id: int, hotel_data: Hotel):
+    async with async_session_maker() as session:
+        if hotel_id:
+            await HotelsRepository(session).update(id=hotel_id, data=hotel_data)
+            await session.commit()
             return {"status": "updated"}
     return {"status": "hotel not found"}
 
