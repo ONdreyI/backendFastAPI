@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, Body
 from sqlalchemy import insert, select, or_, func
 from backendCourse.src.app.dependencies import PaginationDep
-from src.schemas.hotels import Hotel, HotelPUT
+from backendCourse.src.schemas.hotels import Hotel, HotelPUT
 
 from src.database import async_session_maker
 
@@ -43,6 +43,15 @@ async def get_hotels(
         )
 
 
+@router.get("/{hotel_id}")
+async def get_hotel(hotel_id: int):
+    async with async_session_maker() as session:
+        hotel = await HotelsRepository(session).get_one_or_none(id=hotel_id)
+        if not hotel:
+            return {"error": "Hotel not found"}
+        return hotel
+
+
 @router.delete("/{hotel_id}")
 async def delete_hotel(hotel_id: int):
     async with async_session_maker() as session:
@@ -82,11 +91,12 @@ async def create_hotel(
 @router.put("/{hotel_id}")
 async def put_hotel(hotel_id: int, hotel_data: Hotel):
     async with async_session_maker() as session:
-        if hotel_id:
-            await HotelsRepository(session).update(id=hotel_id, data=hotel_data)
-            await session.commit()
-            return {"status": "updated"}
-    return {"status": "hotel not found"}
+        await HotelsRepository(session).update(
+            id=hotel_id,
+            data=hotel_data,
+        )
+        await session.commit()
+        return {"status": "updated"}
 
 
 @router.patch(
@@ -94,13 +104,15 @@ async def put_hotel(hotel_id: int, hotel_data: Hotel):
     summary="Частичное обновление данных об отеле",
     description="<h1>Можно изменить только часть полей отеля</h1>",
 )
-def patch_hotel(hotel_id: int, hotel_data: HotelPUT):
-    global hotels
-    for hotel in hotels:
-        if hotel["id"] == hotel_id:
-            hotel["title"] = hotel_data.title
-            return {"status": "updated"}
-        if hotel["id"] == hotel_id:
-            hotel["name"] = hotel_data.name
-            return {"status": "updated"}
-    return {"status": "hotel not found"}
+async def patch_hotel(
+    hotel_id: int,
+    hotel_data: HotelPUT,
+):
+    async with async_session_maker() as session:
+        await HotelsRepository(session).update(
+            id=hotel_id,
+            data=hotel_data,
+            exclude_unset=True,
+        )
+        await session.commit()
+        return {"status": "updated"}

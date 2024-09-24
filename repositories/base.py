@@ -27,12 +27,16 @@ class BaseRepository:
         result = await self.session.execute(add_data_stmt)
         return result.scalars().one()
 
-    async def update(self, data: BaseModel, **filter_by) -> None:
+    async def update(
+        self, data: BaseModel, exclude_unset: bool = False, **filter_by
+    ) -> None:
         """
         Update an existing record in the database.
         """
         update_data_stmt = (
-            update(self.model).values(**data.model_dump()).filter_by(**filter_by)
+            update(self.model)
+            .filter_by(**filter_by)
+            .values(**data.model_dump(exclude_unset=exclude_unset))
         )
         await self.session.execute(update_data_stmt)
 
