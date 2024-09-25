@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, Body
 from sqlalchemy import insert, select, or_, func
 from backendCourse.src.app.dependencies import PaginationDep
-from backendCourse.src.schemas.hotels import Hotel, HotelPUT
+from backendCourse.src.schemas.hotels import HotelAdd, HotelPATCH
 
 from src.database import async_session_maker
 
@@ -54,7 +54,7 @@ async def get_hotel(hotel_id: int):
 
 @router.post("", name="Add hotel data")
 async def create_hotel(
-    hotel_data: Hotel = Body(
+    hotel_data: HotelAdd = Body(
         openapi_examples={
             "1": {
                 "summary": "Сочи",
@@ -81,7 +81,7 @@ async def create_hotel(
 
 
 @router.put("/{hotel_id}")
-async def put_hotel(hotel_id: int, hotel_data: Hotel):
+async def put_hotel(hotel_id: int, hotel_data: HotelAdd):
     async with async_session_maker() as session:
         await HotelsRepository(session).update(
             id=hotel_id,
@@ -98,7 +98,7 @@ async def put_hotel(hotel_id: int, hotel_data: Hotel):
 )
 async def patch_hotel(
     hotel_id: int,
-    hotel_data: HotelPUT,
+    hotel_data: HotelPATCH,
 ):
     async with async_session_maker() as session:
         await HotelsRepository(session).update(

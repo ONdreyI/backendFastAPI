@@ -1,10 +1,13 @@
-from repositories.base import BaseRepository
+from backendCourse.repositories.base import BaseRepository
 from sqlalchemy import func, select, insert
 from src.models.hotels import HotelsOrm
+
+from backendCourse.src.schemas.hotels import Hotel
 
 
 class HotelsRepository(BaseRepository):
     model = HotelsOrm
+    schema = Hotel
 
     async def get_all(
         self,
@@ -27,7 +30,6 @@ class HotelsRepository(BaseRepository):
         result = await self.session.execute(query)
 
         return result.scalars().all()
-
 
     async def post_object(
         self,
