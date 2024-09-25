@@ -7,8 +7,9 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src.app.hotels import router as hotel_router
-from src.config import settings
+from backendCourse.src.app.hotels import router as hotel_router
+from backendCourse.src.app.auth import router as auth_router
+from backendCourse.src.config import settings
 
 
 print(f"settings.DB_NAME={settings.DB_NAME}")
@@ -22,6 +23,7 @@ def func():
     return {"message": "Wellcome to the HOTELS!"}
 
 
+app.include_router(auth_router)
 app.include_router(hotel_router)
 
 

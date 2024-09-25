@@ -1,5 +1,5 @@
 from backendCourse.src.schemas.users import User
-from base import BaseRepository
+from backendCourse.src.repositories.base import BaseRepository
 from backendCourse.src.models.users import UsersOrm
 
 
