@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 from passlib.context import CryptContext
-from jwt.exceptions import InvalidTokenError
 
-from backendCourse.repositories.users import UsersRepository
+from backendCourse.src.repositories.users import UsersRepository
 from backendCourse.src.database import async_session_maker
 from backendCourse.src.schemas.users import UserRequestAdd, UserAdd
 

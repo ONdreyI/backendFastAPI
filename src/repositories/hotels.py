@@ -1,4 +1,4 @@
-from backendCourse.repositories.base import BaseRepository
+from backendCourse.src.repositories.base import BaseRepository
 from sqlalchemy import func, select, insert
 from src.models.hotels import HotelsOrm
 

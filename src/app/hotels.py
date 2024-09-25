@@ -1,15 +1,10 @@
 from fastapi import APIRouter, Query, Body
-from sqlalchemy import insert, select, or_, func
 from backendCourse.src.app.dependencies import PaginationDep
 from backendCourse.src.schemas.hotels import HotelAdd, HotelPATCH
 
 from src.database import async_session_maker
 
-from src.models.hotels import HotelsOrm
-
-from src.database import engine
-
-from backendCourse.repositories.hotels import HotelsRepository
+from backendCourse.src.repositories.hotels import HotelsRepository
 
 router = APIRouter(
     prefix="/hotels",
