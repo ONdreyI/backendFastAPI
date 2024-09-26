@@ -12,6 +12,7 @@ from fastapi import (
     Request,
 )
 
+from backendCourse.src.app.dependencies import UserIdDep
 from backendCourse.src.database import async_session_maker
 from backendCourse.src.repositories.users import UsersRepository
 from backendCourse.src.schemas.users import (
@@ -62,11 +63,7 @@ async def login_user(
 
 
 @router.get("/only_auth")
-async def only_auth(request: Request):
-    """
-    access_token = '' on None
-    """
-    access_token = request.cookies.get("access_token")
-    if not access_token:
-        raise HTTPException(status_code=401, detail="Требуется авторизация")
-    return {"message": "Получен токен", "access_token": access_token}
+async def only_auth(user_id: UserIdDep):
+    async with async_session_maker() as session:
+        user = await UsersRepository(session).get_one_or_none(id=user_id)
+        return {"user": user}
