@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 
 import jwt
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from passlib.context import CryptContext
 
 from backendCourse.src.repositories.users import UsersRepository
@@ -40,6 +40,7 @@ async def register_user(
 @router.post("/login")
 async def login_user(
     data: UserRequestAdd,
+    response: Response,
 ):
     async with async_session_maker() as session:
         user = await UsersRepository(session).get_one_or_none(email=data.email)
@@ -48,4 +49,8 @@ async def login_user(
                 status_code=401, detail="Пользователь с таким email не существует"
             )
         access_token = create_access_token({"user_id": user.id})
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+        )
         return {"access_token": access_token}
