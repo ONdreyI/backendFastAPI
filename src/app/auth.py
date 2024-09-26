@@ -62,8 +62,14 @@ async def login_user(
         return {"access_token": access_token}
 
 
-@router.get("/only_auth")
-async def only_auth(user_id: UserIdDep):
+@router.get("/me")
+async def get_me(user_id: UserIdDep):
     async with async_session_maker() as session:
         user = await UsersRepository(session).get_one_or_none(id=user_id)
         return {"user": user}
+
+
+@router.get("/logout")
+async def logout(response: Response):
+    response.delete_cookie(key="access_token")
+    return {"status": "Вы вышли из системы"}
