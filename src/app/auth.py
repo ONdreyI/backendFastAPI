@@ -1,16 +1,22 @@
-from datetime import datetime, timezone, timedelta
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Response,
+    Request,
+)
 
-import jwt
-from fastapi import APIRouter, HTTPException, Response
-from passlib.context import CryptContext
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Response,
+    Request,
+)
 
-from backendCourse.src.repositories.users import UsersRepository
-from backendCourse.src.config import settings
 from backendCourse.src.database import async_session_maker
+from backendCourse.src.repositories.users import UsersRepository
 from backendCourse.src.schemas.users import (
     UserRequestAdd,
     UserAdd,
-    UserWithHashedPassword,
 )
 from backendCourse.src.services.auth import AuthService
 
@@ -53,3 +59,14 @@ async def login_user(
             value=access_token,
         )
         return {"access_token": access_token}
+
+
+@router.get("/only_auth")
+async def only_auth(request: Request):
+    """
+    access_token = '' on None
+    """
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Требуется авторизация")
+    return {"message": "Получен токен", "access_token": access_token}
