@@ -17,10 +17,6 @@ from backendCourse.src.services.auth import AuthService
 router = APIRouter(prefix="/auth", tags=["Авторизация и аутентификация"])
 
 
-def verify_password(plain_password, hashed_password):
-    return AuthService().pwd_context.verify(plain_password, hashed_password)
-
-
 @router.post("/register")
 async def register_user(
     data: UserRequestAdd,
@@ -47,7 +43,9 @@ async def login_user(
             raise HTTPException(
                 status_code=401, detail="Пользователь с таким email не существует"
             )
-        if not verify_password(data.password, hashed_password=user.hashed_password):
+        if not AuthService().verify_password(
+            data.password, hashed_password=user.hashed_password
+        ):
             raise HTTPException(status_code=401, detail="Неверный пароль")
         access_token = AuthService().create_access_token({"user_id": user.id})
         response.set_cookie(
