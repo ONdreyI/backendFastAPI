@@ -19,15 +19,12 @@ async def get_rooms():
         return await RoomsRepository(session).get_all()
 
 
-# @router.get("/{hotel_id}", name="Получение одного отеля")
-# async def get_hotel(hotel_id: int):
-#     async with async_session_maker() as session:
-#         hotel = await HotelsRepository(session).get_one_or_none(id=hotel_id)
-#         if not hotel:
-#             return {"error": "Hotel not found"}
-#         return hotel
-#
-#
+@router.get("/{hotel_id}/rooms/{room_id}", name="Получение одного отеля")
+async def get_hotel(hotel_id: int, room_id: int):
+    async with async_session_maker() as session:
+        return await RoomsRepository(session).get_one_or_none(id=room_id)
+
+
 @router.post("/{hotel_id}/rooms", name="Add room data")
 async def create_room(
     room_data: RoomAdd = Body(
