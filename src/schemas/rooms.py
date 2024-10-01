@@ -1,14 +1,23 @@
-from sqlalchemy import String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-from src.database import Base
+from pydantic import Field, BaseModel, ConfigDict
 
 
-class RoomsOrm(Base):
-    __tablename__ = "rooms"
+class RoomAdd(BaseModel):
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    hotel_id: Mapped[int] = mapped_column(ForeignKey("hotels.id"))
-    title: Mapped[str] = mapped_column(String(100))
-    description: Mapped[str | None]
-    price: Mapped[int]
-    quantity: Mapped[int]
+    hotel_id: int
+    title: str
+    description: str
+    price: int
+    quantity: int
+
+
+class Room(RoomAdd):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RoomPATCH(BaseModel):
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    price: int | None = Field(default=None)
+    quantity: int | None = Field(default=None)
