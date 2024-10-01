@@ -27,6 +27,7 @@ async def get_hotel(hotel_id: int, room_id: int):
 
 @router.post("/{hotel_id}/rooms", name="Add room data")
 async def create_room(
+    hotel_id: int,
     room_data: RoomAdd = Body(
         openapi_examples={
             "1": {
@@ -50,10 +51,11 @@ async def create_room(
                 },
             },
         }
-    )
+    ),
 ):
+    _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     async with async_session_maker() as session:
-        room = await RoomsRepository(session).add(room_data)
+        room = await RoomsRepository(session).add(_room_data)
         await session.commit()
 
     return {"status": "Ok", "data": room}
