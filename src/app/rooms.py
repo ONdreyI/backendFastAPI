@@ -14,21 +14,9 @@ router = APIRouter(
 
 
 @router.get("/{hotel_id}/rooms", name="Получение списка номеров при отеле")
-async def get_rooms(
-    hotel_id: int | None = Query(None, description="hotel_id"),
-    title: str | None = Query(None, description=""),
-    description: str | None = Query(None, description=""),
-    price: int | None = Query(None, description=""),
-    quantity: int | None = Query(None, description=""),
-):
+async def get_rooms():
     async with async_session_maker() as session:
-        return await RoomsRepository(session).get_all(
-            hotel_id,
-            title,
-            description,
-            price,
-            quantity,
-        )
+        return await RoomsRepository(session).get_all()
 
 
 # @router.get("/{hotel_id}", name="Получение одного отеля")
@@ -40,7 +28,7 @@ async def get_rooms(
 #         return hotel
 #
 #
-@router.post("/rooms", name="Add room data")
+@router.post("/{hotel_id}/rooms", name="Add room data")
 async def create_room(
     room_data: RoomAdd = Body(
         openapi_examples={
@@ -76,7 +64,7 @@ async def create_room(
 
 #
 #
-@router.put("/{room_id}")
+@router.put("/{hotel_id}/rooms")
 async def put_hotel(room_id: int, room_data: RoomAdd):
     async with async_session_maker() as session:
         await RoomsRepository(session).update(
