@@ -63,12 +63,13 @@ async def create_room(
 
 #
 #
-@router.put("/{hotel_id}/rooms")
-async def put_hotel(room_id: int, room_data: RoomAdd):
+@router.put("/{hotel_id}/rooms/{room_id}")
+async def put_hotel(hotel_id: int, room_id: int, room_data: RoomAdd):
+    _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     async with async_session_maker() as session:
         await RoomsRepository(session).update(
             id=room_id,
-            data=room_data,
+            data=_room_data,
         )
         await session.commit()
         return {"status": "updated"}
