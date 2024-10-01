@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 
-@router.get("/rooms", name="Получение списка номеров при отеле")
+@router.get("/{hotel_id}/rooms", name="Получение списка номеров при отеле")
 async def get_rooms(
     hotel_id: int | None = Query(None, description="hotel_id"),
     title: str | None = Query(None, description=""),
