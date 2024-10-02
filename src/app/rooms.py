@@ -86,11 +86,15 @@ async def patch_hotel(
     room_data: RoomPatchRequest,
 ):
     _room_data = RoomPatch(
-        hotel_id=hotel_id, **room_data.model_dump(exclude_unset=True)
+        hotel_id=hotel_id,
+        **room_data.model_dump(exclude_unset=True),
     )
     async with async_session_maker() as session:
         await RoomsRepository(session).update(
-            id=room_id, data=_room_data, exclude_unset=True, hotel_id=hotel_id
+            _room_data,
+            id=room_id,
+            exclude_unset=True,
+            hotel_id=hotel_id,
         )
         await session.commit()
         return {"status": "updated"}
