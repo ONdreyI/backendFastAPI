@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Query, Body
 from backendCourse.src.app.dependencies import PaginationDep
-from backendCourse.src.schemas.rooms import Room, RoomAdd, RoomPATCH
+from backendCourse.src.schemas.rooms import Room, RoomAdd, RoomPatch, RoomPatchRequest
 
 from backendCourse.src.database import async_session_maker
 
 from backendCourse.src.repositories.rooms import RoomsRepository
-from backendCourse.src.schemas.rooms import RoomAdd
+
 
 router = APIRouter(
     prefix="/hotels",
@@ -75,27 +75,27 @@ async def put_hotel(hotel_id: int, room_id: int, room_data: RoomAdd):
         return {"status": "updated"}
 
 
-#
-#
-# @router.patch(
-#     "/{hotel_id}",
-#     summary="Частичное обновление данных об отеле",
-#     description="<h1>Можно изменить только часть полей отеля</h1>",
-# )
-# async def patch_hotel(
-#     hotel_id: int,
-#     hotel_data: HotelPATCH,
-# ):
-#     async with async_session_maker() as session:
-#         await HotelsRepository(session).update(
-#             id=hotel_id,
-#             data=hotel_data,
-#             exclude_unset=True,
-#         )
-#         await session.commit()
-#         return {"status": "updated"}
-#
-#
+@router.patch(
+    "/{hotel_id}/rooms/{room_id}",
+    summary="Частичное обновление данных о номерах",
+    description="<h1>Можно изменить только часть полей номера</h1>",
+)
+async def patch_hotel(
+    hotel_id: int,
+    room_id: int,
+    room_data: RoomPatchRequest,
+):
+    _room_data = RoomPatch(
+        hotel_id=hotel_id, **room_data.model_dump(exclude_unset=True)
+    )
+    async with async_session_maker() as session:
+        await RoomsRepository(session).update(
+            id=room_id, data=_room_data, exclude_unset=True, hotel_id=hotel_id
+        )
+        await session.commit()
+        return {"status": "updated"}
+
+
 @router.delete("/{room_id}")
 async def delete_hotel(room_id: int):
     async with async_session_maker() as session:
