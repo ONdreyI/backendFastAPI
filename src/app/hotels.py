@@ -39,12 +39,11 @@ async def get_hotels(
 
 
 @router.get("/{hotel_id}", name="Получение одного отеля")
-async def get_hotel(hotel_id: int):
-    async with async_session_maker() as session:
-        hotel = await HotelsRepository(session).get_one_or_none(id=hotel_id)
-        if not hotel:
-            return {"error": "Hotel not found"}
-        return hotel
+async def get_hotel(hotel_id: int, db: DBDep):
+    hotel = await db.hotels.get_one_or_none(id=hotel_id)
+    if not hotel:
+        return {"error": "Hotel not found"}
+    return hotel
 
 
 @router.post("", name="Add hotel data")
