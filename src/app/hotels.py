@@ -93,17 +93,17 @@ async def put_hotel(
     description="<h1>Можно изменить только часть полей отеля</h1>",
 )
 async def patch_hotel(
+    db: DBDep,
     hotel_id: int,
     hotel_data: HotelPATCH,
 ):
-    async with async_session_maker() as session:
-        await HotelsRepository(session).update(
-            id=hotel_id,
-            data=hotel_data,
-            exclude_unset=True,
-        )
-        await session.commit()
-        return {"status": "updated"}
+    await db.hotels.update(
+        id=hotel_id,
+        data=hotel_data,
+        exclude_unset=True,
+    )
+    await db.commit()
+    return {"status": "updated"}
 
 
 @router.delete("/{hotel_id}")
