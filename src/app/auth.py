@@ -60,10 +60,12 @@ async def login_user(
 
 
 @router.get("/me")
-async def get_me(user_id: UserIdDep):
-    async with async_session_maker() as session:
-        user = await UsersRepository(session).get_one_or_none(id=user_id)
-        return {"user": user}
+async def get_me(
+    user_id: UserIdDep,
+    db: DBDep,
+):
+    user = await db.users.get_one_or_none(id=user_id)
+    return {"user": user}
 
 
 @router.get("/logout")
