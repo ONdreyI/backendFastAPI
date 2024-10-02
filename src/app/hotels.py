@@ -2,7 +2,7 @@ from fastapi import APIRouter, Query, Body
 from backendCourse.src.app.dependencies import PaginationDep, DBDep
 from backendCourse.src.schemas.hotels import HotelAdd, HotelPATCH
 
-from src.database import async_session_maker
+from backendCourse.src.database import async_session_maker
 
 from backendCourse.src.repositories.hotels import HotelsRepository
 
@@ -48,6 +48,7 @@ async def get_hotel(hotel_id: int, db: DBDep):
 
 @router.post("", name="Add hotel data")
 async def create_hotel(
+    db: DBDep,
     hotel_data: HotelAdd = Body(
         openapi_examples={
             "1": {
@@ -67,10 +68,8 @@ async def create_hotel(
         }
     ),
 ):
-    async with async_session_maker() as session:
-        hotel = await HotelsRepository(session).add(hotel_data)
-        await session.commit()
-
+    hotel = await db.hotels.add(hotel_data)
+    await db.commit()
     return {"status": "Ok", "data": hotel}
 
 
