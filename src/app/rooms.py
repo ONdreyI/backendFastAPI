@@ -113,8 +113,11 @@ async def patch_hotel(
 
 
 @router.delete("/{hotel_id}/rooms/{room_id}")
-async def delete_hotel(hotel_id: int, room_id: int):
-    async with async_session_maker() as session:
-        await RoomsRepository(session).delete_data(id=room_id, hotel_id=hotel_id)
-        await session.commit()
-        return {"status": "deleted"}
+async def delete_hotel(
+    db: DBDep,
+    hotel_id: int,
+    room_id: int,
+):
+    await db.rooms.delete_data(id=room_id, hotel_id=hotel_id)
+    await db.commit()
+    return {"status": "deleted"}
