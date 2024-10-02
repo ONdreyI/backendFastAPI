@@ -65,7 +65,7 @@ async def create_hotel(
                 },
             },
         }
-    )
+    ),
 ):
     async with async_session_maker() as session:
         hotel = await HotelsRepository(session).add(hotel_data)
@@ -75,14 +75,17 @@ async def create_hotel(
 
 
 @router.put("/{hotel_id}")
-async def put_hotel(hotel_id: int, hotel_data: HotelAdd):
-    async with async_session_maker() as session:
-        await HotelsRepository(session).update(
-            id=hotel_id,
-            data=hotel_data,
-        )
-        await session.commit()
-        return {"status": "updated"}
+async def put_hotel(
+    hotel_id: int,
+    hotel_data: HotelAdd,
+    db: DBDep,
+):
+    await db.hotels.update(
+        id=hotel_id,
+        data=hotel_data,
+    )
+    await db.commit()
+    return {"status": "updated"}
 
 
 @router.patch(
