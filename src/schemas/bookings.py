@@ -1,39 +1,43 @@
+from datetime import date
+
 from pydantic import BaseModel, ConfigDict
 
 
-class RoomAddRequest(BaseModel):
+class BookingAddRequest(BaseModel):
 
-    title: str
+    date_from: date
+    date_to: date
     description: str | None = None
     price: int
-    quantity: int
 
 
-class RoomAdd(BaseModel):
+class BookingAdd(BaseModel):
 
-    hotel_id: int
-    title: str
+    room_id: int
+    user_id: int
+    date_from: date
+    date_to: date
     description: str | None = None
     price: int
-    quantity: int
 
 
-class Room(RoomAdd):
+class Booking(BookingAdd):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
 
 
-class RoomPatchRequest(BaseModel):
-    title: str | None = None
+class BookingPatchRequest(BaseModel):
+    date_from: date | None = None
+    date_to: date | None = None
     description: str | None = None
     price: int | None = None
-    quantity: int | None = None
 
 
-class RoomPatch(BaseModel):
-    hotel_id: int | None = None
-    title: str | None = None
+class BookingPatch(BaseModel):
+    room_id: int | None = None
+    user_id: int | None = None
+    date_from: date | None = None
+    date_to: date | None = None
     description: str | None = None
     price: int | None = None
-    quantity: int | None = None
