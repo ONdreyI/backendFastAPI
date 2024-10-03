@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query, Body
-from backendCourse.src.app.dependencies import PaginationDep, DBDep
+from backendCourse.src.app.dependencies import PaginationDep, DBDep, UserIdDep
 from backendCourse.src.schemas.bookings import (
     Booking,
     BookingAdd,
@@ -15,19 +15,19 @@ router = APIRouter(
 )
 
 
-@router.get("/GET/bookings/me", name="Получение только своих бронирований")
-async def get_rooms(
-    db: DBDep,
-    user_id: int,
-):
-    return await db.bookings.get_filtered(user_id=user_id)
-
-
-@router.get("/GET/bookings", name="Получение всех бронирований")
+@router.get("", name="Получение всех бронирований")
 async def get_hotel(
     db: DBDep,
 ):
     return await db.bookings.get_all()
+
+
+@router.get("/me", name="Получение только своих бронирований")
+async def get_rooms(
+    db: DBDep,
+    user_id: UserIdDep,
+):
+    return await db.bookings.get_filtered(user_id=user_id)
 
 
 @router.post(
