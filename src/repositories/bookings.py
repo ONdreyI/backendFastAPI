@@ -8,5 +8,3 @@ from backendCourse.src.schemas.bookings import Booking
 class BookingsRepository(BaseRepository):
     model = BookingsOrm
     schema = Booking
-
-
