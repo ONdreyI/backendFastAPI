@@ -5,16 +5,16 @@ from pydantic import BaseModel, ConfigDict
 
 class BookingAddRequest(BaseModel):
 
+    room_id: int
     date_from: date
     date_to: date
     description: str | None = None
-    price: int
 
 
 class BookingAdd(BaseModel):
 
-    room_id: int
     user_id: int
+    room_id: int
     date_from: date
     date_to: date
     description: str | None = None
