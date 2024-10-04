@@ -1,7 +1,11 @@
-from backendCourse.src.repositories.base import BaseRepository
-from sqlalchemy import func, select, insert
-from src.models.hotels import HotelsOrm
+from datetime import date
 
+from sqlalchemy import func, select, insert
+from backendCourse.src.models.hotels import HotelsOrm
+from backendCourse.src.models.rooms import RoomsOrm
+
+from backendCourse.src.repositories.base import BaseRepository
+from backendCourse.src.repositories.utils import rooms_ids_for_booking
 from backendCourse.src.schemas.hotels import Hotel
 
 
@@ -15,7 +19,7 @@ class HotelsRepository(BaseRepository):
         title,
         limit,
         offset,
-    ):
+    ) -> list[Hotel]:
         query = select(HotelsOrm)
         if location:
             query = query.filter(
@@ -29,12 +33,20 @@ class HotelsRepository(BaseRepository):
         print(query.compile(compile_kwargs={"literal_binds": True}))
         result = await self.session.execute(query)
 
-        return result.scalars().all()
+        return [
+            Hotel.model_validate(hotel, from_attributes=True)
+            for hotel in result.scalars().all()
+        ]
 
-    async def post_object(
+    async def get_filtered_by_time(
         self,
-        hotel_data,
+        date_from: date,
+        date_to: date,
     ):
-        query = insert(self.model).values(hotel_data.model_dump())
-        result = await self.session.execute(query)
-        return result.scalars().all()
+        rooms_ids_to_get = rooms_ids_for_booking(date_from, date_to)
+        hotel_ids_to_get = (
+            select(RoomsOrm.hotel_id)
+            .select_from(RoomsOrm)
+            .filter(RoomsOrm.id.in_(rooms_ids_to_get))
+        )
+        return await self.get_filtered(HotelsOrm.id.in_(hotel_ids_to_get))
