@@ -62,4 +62,3 @@ class RoomsRepository(BaseRepository):
             rooms_left_table.c.rooms_left > 0
         )
 
-        print(query.compile(bind=engine, compile_kwargs={"literal_binds": True}))
