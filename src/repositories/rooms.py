@@ -21,7 +21,7 @@ class RoomsRepository(BaseRepository):
         date_to: date,
     ):
         """
-        with rooms_count as (
+        !with rooms_count as (
                 SELECT room_id, count(*) as rooms_booked from bookings
                 WHERE date_to >= '2024-07-01' and date_from <= '2024-07-07'
                  GROUP by room_id
@@ -32,7 +32,7 @@ class RoomsRepository(BaseRepository):
                 LEFT JOIN rooms_count ON rooms.id = rooms_count.room_id
         )
         SELECT * from rooms_left_table
-        WHERE rooms_left > 0;
+        WHERE rooms_left > 0 AND room_id in (SELECT id FROM rooms WHERE hotel_id = 16);
         """
         rooms_count = (
             select(BookingsOrm.room_id, func.count("*").label("rooms_booked"))
@@ -46,18 +46,28 @@ class RoomsRepository(BaseRepository):
         )
         rooms_left_table = (
             select(
-                self.model.id.label("rooms_id"),
+                RoomsOrm.id.label("room_id"),
                 (
-                    self.model.quantity - func.coalesce(rooms_count.c.rooms_booked, 0)
+                    RoomsOrm.quantity - func.coalesce(rooms_count.c.rooms_booked, 0)
                 ).label("rooms_left"),
             )
-            .select_from(self.model)
-            .outerjoin(
-                rooms_count,
-                self.model.id == rooms_count.c.room_id,
-            )
+            .select_from(RoomsOrm)
+            .outerjoin(rooms_count, RoomsOrm.id == rooms_count.c.room_id)
             .cte(name="rooms_left_table")
         )
-        query = (select("*").select_from(rooms_left_table)).filter(
-            rooms_left_table.c.rooms_left > 0
+        rooms_ids_for_hotel = (
+            select(RoomsOrm.id)
+            .select_from(RoomsOrm)
+            .filter_by(hotel_id=hotel_id)
+            .subquery(name="rooms_ids_for_hotel")
         )
+        rooms_ids_to_get = (
+            select(rooms_left_table.c.room_id)
+            .select_from(rooms_left_table)
+            .filter(
+                rooms_left_table.c.rooms_left > 0,
+                rooms_left_table.c.room_id.in_(rooms_ids_for_hotel),
+            )
+        )
+
+        return await self.get_filtered(RoomsOrm.id.in_(rooms_ids_to_get))
