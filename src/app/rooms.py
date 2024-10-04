@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Query, Body
 from backendCourse.src.app.dependencies import PaginationDep, DBDep
 from backendCourse.src.schemas.rooms import (
@@ -23,8 +25,14 @@ router = APIRouter(
 async def get_rooms(
     db: DBDep,
     hotel_id: int,
+    date_from: date = Query(example=["2024-08-01"]),
+    date_to: date = Query(example=["2024-08-31"]),
 ):
-    return await db.rooms.get_filtered(hotel_id=hotel_id)
+    return await db.rooms.filter_by_time(
+        hotel_id=hotel_id,
+        date_from=date_from,
+        date_to=date_to,
+    )
 
 
 @router.get("/{hotel_id}/rooms/{room_id}", name="Получение одного отеля")
