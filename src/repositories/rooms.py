@@ -61,4 +61,3 @@ class RoomsRepository(BaseRepository):
         query = (select("*").select_from(rooms_left_table)).filter(
             rooms_left_table.c.rooms_left > 0
         )
-
