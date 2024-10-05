@@ -56,4 +56,15 @@ class HotelsRepository(BaseRepository):
             .select_from(RoomsOrm)
             .filter(RoomsOrm.id.in_(rooms_ids_to_get))
         )
-        return await self.get_filtered(HotelsOrm.id.in_(hotel_ids_to_get))
+        filters = [HotelsOrm.id.in_(hotel_ids_to_get)]
+        if location:
+            filters.append(
+                func.lower(HotelsOrm.location).contains(location.strip().lower())
+            )
+        if title:
+            filters.append(func.lower(HotelsOrm.title).contains(title.strip().lower()))
+        return await self.get_filtered(
+            *filters,
+            limit=limit,
+            offset=offset,
+        )
