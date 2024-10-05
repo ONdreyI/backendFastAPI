@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Query, Body
 
 from backendCourse.src.app.dependencies import PaginationDep, DBDep
@@ -15,13 +17,23 @@ async def get_hotels(
     db: DBDep,
     title: str | None = Query(None, description="Название отеля"),
     location: str | None = Query(None, description="Адрес отеля"),
+    date_from: date = Query(example="2024-08-01"),
+    date_to: date = Query(example="2024-08-10"),
 ):
     per_page = pagination.per_page or 5
-    return await db.hotels.get_all(
-        location,
-        title,
-        limit=per_page or 5,
-        offset=per_page * (pagination.page - 1),
+    # return await db.hotels.get_all(
+    #     location,
+    #     title,
+    #     limit=per_page or 5,
+    #     offset=per_page * (pagination.page - 1),
+    # )
+    return await db.hotels.get_filtered_by_time(
+        # location,
+        # title,
+        # limit=per_page or 5,
+        # offset=per_page * (pagination.page - 1),
+        date_from=date_from,
+        date_to=date_to,
     )
 
 
