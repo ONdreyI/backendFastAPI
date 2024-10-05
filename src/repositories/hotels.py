@@ -40,6 +40,10 @@ class HotelsRepository(BaseRepository):
 
     async def get_filtered_by_time(
         self,
+        location: str,
+        title: str,
+        limit: int,
+        offset,
         date_from: date,
         date_to: date,
     ):

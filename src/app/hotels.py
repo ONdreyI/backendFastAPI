@@ -24,14 +24,14 @@ async def get_hotels(
     # return await db.hotels.get_all(
     #     location,
     #     title,
-    #     limit=per_page or 5,
-    #     offset=per_page * (pagination.page - 1),
+    # limit=per_page or 5,
+    # offset=per_page * (pagination.page - 1),
     # )
     return await db.hotels.get_filtered_by_time(
-        # location,
-        # title,
-        # limit=per_page or 5,
-        # offset=per_page * (pagination.page - 1),
+        location,
+        title,
+        limit=per_page or 5,
+        offset=per_page * (pagination.page - 1),
         date_from=date_from,
         date_to=date_to,
     )
