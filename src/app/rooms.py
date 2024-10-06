@@ -2,6 +2,7 @@ from datetime import date
 
 from fastapi import APIRouter, Query, Body
 from backendCourse.src.app.dependencies import PaginationDep, DBDep
+from backendCourse.src.schemas.facilities import RoomFacilityAdd
 from backendCourse.src.schemas.rooms import (
     Room,
     RoomAdd,
@@ -73,6 +74,11 @@ async def create_room(
 ):
     _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     room = await db.rooms.add(_room_data)
+    rooms_facilities_data = [
+        RoomFacilityAdd(room_id=room.id, facility_id=f_id)
+        for f_id in room_data.facilities_ids
+    ]
+    await db.rooms_facilities.add_bulk(rooms_facilities_data)
     await db.commit()
     return {"status": "Ok", "data": room}
 
