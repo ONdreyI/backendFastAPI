@@ -1,20 +1,15 @@
 from datetime import date
 
 from fastapi import APIRouter, Query, Body
-from backendCourse.src.app.dependencies import PaginationDep, DBDep
+
+from backendCourse.src.app.dependencies import DBDep
 from backendCourse.src.schemas.facilities import RoomFacilityAdd
 from backendCourse.src.schemas.rooms import (
-    Room,
     RoomAdd,
     RoomAddRequest,
     RoomPatch,
     RoomPatchRequest,
 )
-
-from backendCourse.src.database import async_session_maker
-
-from backendCourse.src.repositories.rooms import RoomsRepository
-
 
 router = APIRouter(
     prefix="/hotels",
@@ -52,21 +47,21 @@ async def create_room(
             "1": {
                 "summary": "Sochi Hotel",
                 "value": {
-                    "hotel_id": 12,
                     "title": "Sochi Hotel Room",
                     "description": "A luxurious room in Sochi Hotel",
                     "price": 100,
                     "quantity": 5,
+                    "facilities_ids": [1, 2, 3, 4, 5],
                 },
             },
             "2": {
                 "summary": "Dubai Hotel",
                 "value": {
-                    "hotel_id": 19,
                     "title": "Dubai Hotel Room",
                     "description": "A usually room in Dubai Hotel",
                     "price": 60,
                     "quantity": 15,
+                    "facilities_ids": [1, 2, 3],
                 },
             },
         }
@@ -95,6 +90,12 @@ async def put_hotel(
         _room_data,
         id=room_id,
     )
+    await db.rooms_facilities.delete_data(room_id=room_id)
+    rooms_facilities_data = [
+        RoomFacilityAdd(room_id=room_id, facility_id=f_id)
+        for f_id in room_data.facilities_ids
+    ]
+    await db.rooms_facilities.add_bulk(rooms_facilities_data)
     await db.commit()
     return {"status": "updated"}
 
@@ -109,6 +110,8 @@ async def patch_hotel(
     hotel_id: int,
     room_id: int,
     room_data: RoomPatchRequest,
+    facility_id_to_delete: int,
+    new_facility_id: int,
 ):
     _room_data = RoomPatch(
         hotel_id=hotel_id,
@@ -120,6 +123,17 @@ async def patch_hotel(
         exclude_unset=True,
         hotel_id=hotel_id,
     )
+    await db.rooms_facilities.delete_data(
+        room_id=room_id,
+        facility_id=facility_id_to_delete,
+    )
+    rooms_facilities_data = [
+        RoomFacilityAdd(
+            room_id=room_id,
+            facility_id=new_facility_id,
+        )
+    ]
+    await db.rooms_facilities.add_bulk(rooms_facilities_data)
     await db.commit()
     return {"status": "updated"}
 
