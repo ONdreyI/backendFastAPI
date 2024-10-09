@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 
+from backendCourse.src.schemas.facilities import Facilities
+
 
 class RoomAddRequest(BaseModel):
 
@@ -23,6 +25,10 @@ class Room(RoomAdd):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class RoomWithRels(Room):
+    facilities: list[Facilities]
 
 
 class RoomPatchRequest(BaseModel):
