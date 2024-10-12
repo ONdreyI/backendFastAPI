@@ -1,12 +1,11 @@
 from sqlalchemy import insert, select, delete
 
-from backendCourse.src.repositories.base import BaseRepository
 from backendCourse.src.models.facilities import FacilitiesOrm, RoomsFacilitiesOrm
-from backendCourse.src.schemas.facilities import Facilities, RoomFacility
+from backendCourse.src.repositories.base import BaseRepository
 from backendCourse.src.repositories.mappers.mappers import (
-    FacilityDataMapper,
     RoomFacilityDataMapper,
 )
+from backendCourse.src.schemas.facilities import RoomFacility
 
 
 class FacilitiesRepository(BaseRepository):

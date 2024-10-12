@@ -1,17 +1,15 @@
 from datetime import date
 
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload, joinedload, join
+from sqlalchemy.orm import selectinload, joinedload
 
-from backendCourse.src.models.facilities import RoomsFacilitiesOrm, FacilitiesOrm
 from backendCourse.src.models.rooms import RoomsOrm
 from backendCourse.src.repositories.base import BaseRepository
-from backendCourse.src.repositories.utils import rooms_ids_for_booking
-from backendCourse.src.schemas.rooms import Room, RoomWithRels
 from backendCourse.src.repositories.mappers.mappers import (
     RoomDataMapper,
     RoomDataWithRelsMapper,
 )
+from backendCourse.src.repositories.utils import rooms_ids_for_booking
 
 
 class RoomsRepository(BaseRepository):
