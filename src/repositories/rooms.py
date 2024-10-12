@@ -8,11 +8,15 @@ from backendCourse.src.models.rooms import RoomsOrm
 from backendCourse.src.repositories.base import BaseRepository
 from backendCourse.src.repositories.utils import rooms_ids_for_booking
 from backendCourse.src.schemas.rooms import Room, RoomWithRels
+from backendCourse.src.repositories.mappers.mappers import (
+    RoomDataMapper,
+    RoomDataWithRelsMapper,
+)
 
 
 class RoomsRepository(BaseRepository):
     model = RoomsOrm
-    schema = Room
+    mapper = RoomDataMapper
 
     async def get_filtered_by_time(
         self,
@@ -29,7 +33,7 @@ class RoomsRepository(BaseRepository):
         )
         result = await self.session.execute(query)
         return [
-            RoomWithRels.model_validate(model)
+            RoomDataWithRelsMapper.map_to_domain_entity(model)
             for model in result.unique().scalars().all()
         ]
 
@@ -46,7 +50,7 @@ class RoomsRepository(BaseRepository):
         room = result.unique().scalars().first()
 
         if room:
-            room_with_facilities = RoomWithRels.model_validate(room)
+            room_with_facilities = RoomDataWithRelsMapper.map_to_domain_entity(room)
             return room_with_facilities
         else:
             return None
