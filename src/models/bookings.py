@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy import String, ForeignKey, Date
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
-from backendCourse.src.database import Base
+from src.database import Base
 
 
 class BookingsOrm(Base):

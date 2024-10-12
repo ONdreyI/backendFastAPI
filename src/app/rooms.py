@@ -35,7 +35,7 @@ async def get_hotel(
     hotel_id: int,
     room_id: int,
 ):
-    return await db.rooms.get_one_or_none(id=room_id)
+    return await db.rooms.get_one_or_none_with_facilities(room_id=room_id)
 
 
 @router.post("/{hotel_id}/rooms", name="Add room data")
