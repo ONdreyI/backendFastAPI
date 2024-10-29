@@ -26,7 +26,7 @@ class BaseRepository:
             self.mapper.map_to_domain_entity(model) for model in result.scalars().all()
         ]
 
-    async def get_all(self):
+    async def get_all(self, *args):
         return await self.get_filtered()
 
     async def get_one_or_none(self, **filter_by):

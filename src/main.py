@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 import uvicorn
 
@@ -6,6 +8,7 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
+from backendCourse.src.init import redis_manager
 from backendCourse.src.app.hotels import router as hotel_router
 from backendCourse.src.app.auth import router as auth_router
 from backendCourse.src.app.rooms import router as room_router
@@ -13,9 +16,17 @@ from backendCourse.src.app.bookings import router as bookings_router
 from backendCourse.src.app.facilities import router as facilities_router
 from backendCourse.src.config import settings
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await redis_manager.connect()
+    yield
+    await redis_manager.close()
+
+
 print(f"settings.DB_NAME={settings.DB_NAME}")
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/")

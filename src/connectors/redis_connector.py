@@ -12,29 +12,16 @@ class RedisManager:
 
     async def set(self, key: str, value: str, expire: int = None):
         if expire:
-            await self.redis.set(key, value, expire)
+            await self.redis.set(key, value, ex=expire)
         else:
             await self.redis.set(key, value)
 
     async def get(self, key: str):
-        """
-        Get value by key.
-        :param key:
-        :return:
-        """
         return await self.redis.get(key)
 
     async def delete(self, key: str):
-        """
-        Delete key from Redis.
-        :param key:
-        :return:
-        """
         await self.redis.delete(key)
 
     async def close(self):
-        """
-        Close Redis connection.
-        :return:
-        """
-        await self.redis.close()
+        if self.redis:
+            await self.redis.close()

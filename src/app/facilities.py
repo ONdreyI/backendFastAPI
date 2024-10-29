@@ -1,7 +1,9 @@
 from datetime import date
+import json
 
 from fastapi import APIRouter, Query, Body
 from backendCourse.src.app.dependencies import PaginationDep, DBDep
+from backendCourse.src.init import redis_manager
 from backendCourse.src.schemas.facilities import (
     Facilities,
     FacilitiesAdd,
@@ -18,10 +20,8 @@ router = APIRouter(
 )
 
 
-@router.get("", name="Получение списка удобств")
-async def get_facilities(
-    db: DBDep,
-):
+@router.get("")
+async def get_facilities(db: DBDep):
     return await db.facilities.get_all()
 
 
