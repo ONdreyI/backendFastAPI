@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from backendCourse.src.schemas.facilities import Facilities
+from src.schemas.facilities import Facilities
 
 
 class RoomAddRequest(BaseModel):

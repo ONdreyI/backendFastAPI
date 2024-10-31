@@ -12,14 +12,14 @@ from fastapi import (
     Request,
 )
 
-from backendCourse.src.app.dependencies import UserIdDep, DBDep
-from backendCourse.src.database import async_session_maker
-from backendCourse.src.repositories.users import UsersRepository
-from backendCourse.src.schemas.users import (
+from src.app.dependencies import UserIdDep, DBDep
+from src.database import async_session_maker
+from src.repositories.users import UsersRepository
+from src.schemas.users import (
     UserRequestAdd,
     UserAdd,
 )
-from backendCourse.src.services.auth import AuthService
+from src.services.auth import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Авторизация и аутентификация"])
 

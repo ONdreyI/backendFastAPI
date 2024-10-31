@@ -2,9 +2,9 @@ from datetime import date
 
 from fastapi import APIRouter, Query, Body
 
-from backendCourse.src.app.dependencies import DBDep
-from backendCourse.src.schemas.facilities import RoomFacilityAdd
-from backendCourse.src.schemas.rooms import (
+from src.app.dependencies import DBDep
+from src.schemas.facilities import RoomFacilityAdd
+from src.schemas.rooms import (
     RoomAdd,
     RoomAddRequest,
     RoomPatch,

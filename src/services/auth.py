@@ -4,7 +4,7 @@ import jwt
 from fastapi import HTTPException
 from passlib.context import CryptContext
 
-from backendCourse.src.config import settings
+from src.config import settings
 
 
 class AuthService:

@@ -12,13 +12,13 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from backendCourse.src.init import redis_manager
-from backendCourse.src.app.hotels import router as hotel_router
-from backendCourse.src.app.auth import router as auth_router
-from backendCourse.src.app.rooms import router as room_router
-from backendCourse.src.app.bookings import router as bookings_router
-from backendCourse.src.app.facilities import router as facilities_router
-from backendCourse.src.config import settings
+from src.init import redis_manager
+from src.app.hotels import router as hotel_router
+from src.app.auth import router as auth_router
+from src.app.rooms import router as room_router
+from src.app.bookings import router as bookings_router
+from src.app.facilities import router as facilities_router
+from src.config import settings
 
 
 @asynccontextmanager

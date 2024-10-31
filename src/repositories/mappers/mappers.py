@@ -1,14 +1,14 @@
-from backendCourse.src.models.bookings import BookingsOrm
-from backendCourse.src.models.facilities import FacilitiesOrm, RoomsFacilitiesOrm
-from backendCourse.src.models.hotels import HotelsOrm
-from backendCourse.src.models.rooms import RoomsOrm
-from backendCourse.src.models.users import UsersOrm
-from backendCourse.src.repositories.mappers.base import DataMapper
-from backendCourse.src.schemas.bookings import Booking
-from backendCourse.src.schemas.facilities import Facilities, RoomFacility
-from backendCourse.src.schemas.hotels import Hotel
-from backendCourse.src.schemas.rooms import Room, RoomWithRels
-from backendCourse.src.schemas.users import User
+from src.models.bookings import BookingsOrm
+from src.models.facilities import FacilitiesOrm, RoomsFacilitiesOrm
+from src.models.hotels import HotelsOrm
+from src.models.rooms import RoomsOrm
+from src.models.users import UsersOrm
+from src.repositories.mappers.base import DataMapper
+from src.schemas.bookings import Booking
+from src.schemas.facilities import Facilities, RoomFacility
+from src.schemas.hotels import Hotel
+from src.schemas.rooms import Room, RoomWithRels
+from src.schemas.users import User
 
 
 class HotelDataMapper(DataMapper):

@@ -3,13 +3,13 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload, joinedload
 
-from backendCourse.src.models.rooms import RoomsOrm
-from backendCourse.src.repositories.base import BaseRepository
-from backendCourse.src.repositories.mappers.mappers import (
+from src.models.rooms import RoomsOrm
+from src.repositories.base import BaseRepository
+from src.repositories.mappers.mappers import (
     RoomDataMapper,
     RoomDataWithRelsMapper,
 )
-from backendCourse.src.repositories.utils import rooms_ids_for_booking
+from src.repositories.utils import rooms_ids_for_booking
 
 
 class RoomsRepository(BaseRepository):

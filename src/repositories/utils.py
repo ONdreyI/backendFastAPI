@@ -3,11 +3,11 @@ from datetime import date
 from sqlalchemy import insert, func, select
 from sqlalchemy.orm import session
 
-from backendCourse.src.database import engine
-from backendCourse.src.models.bookings import BookingsOrm
-from backendCourse.src.repositories.base import BaseRepository
-from backendCourse.src.models.rooms import RoomsOrm
-from backendCourse.src.schemas.rooms import Room
+from src.database import engine
+from src.models.bookings import BookingsOrm
+from src.repositories.base import BaseRepository
+from src.models.rooms import RoomsOrm
+from src.schemas.rooms import Room
 
 
 def rooms_ids_for_booking(

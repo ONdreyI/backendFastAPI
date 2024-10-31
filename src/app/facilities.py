@@ -3,17 +3,17 @@ import json
 from fastapi_cache.decorator import cache
 
 from fastapi import APIRouter, Query, Body
-from backendCourse.src.app.dependencies import PaginationDep, DBDep
-from backendCourse.src.init import redis_manager
-from backendCourse.src.schemas.facilities import (
+from src.app.dependencies import PaginationDep, DBDep
+from src.init import redis_manager
+from src.schemas.facilities import (
     Facilities,
     FacilitiesAdd,
 )
 
-from backendCourse.src.database import async_session_maker
+from src.database import async_session_maker
 
-from backendCourse.src.repositories.rooms import RoomsRepository
-from backendCourse.src.tasks.tasks import test_task
+from src.repositories.rooms import RoomsRepository
+from src.tasks.tasks import test_task
 
 router = APIRouter(
     prefix="/facilities",

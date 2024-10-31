@@ -3,8 +3,8 @@ from datetime import date
 from fastapi import APIRouter, Query, Body
 from fastapi_cache.decorator import cache
 
-from backendCourse.src.app.dependencies import PaginationDep, DBDep
-from backendCourse.src.schemas.hotels import HotelAdd, HotelPATCH
+from src.app.dependencies import PaginationDep, DBDep
+from src.schemas.hotels import HotelAdd, HotelPATCH
 
 router = APIRouter(
     prefix="/hotels",

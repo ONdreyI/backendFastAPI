@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query, Body
-from backendCourse.src.app.dependencies import PaginationDep, DBDep, UserIdDep
-from backendCourse.src.schemas.bookings import (
+from src.app.dependencies import PaginationDep, DBDep, UserIdDep
+from src.schemas.bookings import (
     Booking,
     BookingAdd,
     BookingAddRequest,

@@ -1,7 +1,7 @@
 from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
 
-from backendCourse.src.repositories.mappers.base import DataMapper
+from src.repositories.mappers.base import DataMapper
 
 
 class BaseRepository:

@@ -1,12 +1,12 @@
 from datetime import date
 
 from sqlalchemy import func, select, insert
-from backendCourse.src.models.hotels import HotelsOrm
-from backendCourse.src.models.rooms import RoomsOrm
-from backendCourse.src.repositories.mappers.mappers import HotelDataMapper
-from backendCourse.src.repositories.base import BaseRepository
-from backendCourse.src.repositories.utils import rooms_ids_for_booking
-from backendCourse.src.schemas.hotels import Hotel
+from src.models.hotels import HotelsOrm
+from src.models.rooms import RoomsOrm
+from src.repositories.mappers.mappers import HotelDataMapper
+from src.repositories.base import BaseRepository
+from src.repositories.utils import rooms_ids_for_booking
+from src.schemas.hotels import Hotel
 
 
 class HotelsRepository(BaseRepository):
