@@ -13,7 +13,7 @@ from backendCourse.src.schemas.facilities import (
 from backendCourse.src.database import async_session_maker
 
 from backendCourse.src.repositories.rooms import RoomsRepository
-
+from backendCourse.src.tasks.tasks import test_task
 
 router = APIRouter(
     prefix="/facilities",
@@ -60,6 +60,7 @@ async def create_room(
 
     facility = await db.facilities.add(facilities_data)
     await db.commit()
+    test_task.delay()
     return {"status": "Ok", "data": facility}
 
 
