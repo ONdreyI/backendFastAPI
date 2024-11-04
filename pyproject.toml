@@ -22,6 +22,7 @@ fastapi-cache2 = "^0.2.2"
 celery = "^5.4.0"
 pillow = "^11.0.0"
 python-multipart = "^0.0.17"
+pytest = "^8.3.3"
 
 
 [build-system]
