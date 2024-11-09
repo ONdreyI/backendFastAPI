@@ -8,7 +8,7 @@ class RoomsFacilitiesOrm(Base):
     __tablename__ = "rooms_facilities"
     id: Mapped[int] = mapped_column(
         primary_key=True,
-        server_default=Sequence("rooms_facilities_id_seq").next_value(),
+        autoincrement=True,
     )
     room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
     facility_id: Mapped[int] = mapped_column(ForeignKey("facilities.id"))
