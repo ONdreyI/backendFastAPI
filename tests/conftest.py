@@ -1,11 +1,30 @@
+import json
+
 import pytest
 from httpx import AsyncClient, ASGITransport
-from src.config import settings
-from src.database import Base, engine_null_pool
-from src.main import app
+
 from src.models import *
-from tests.data_for_tests import data_iterator
-from tests.data_for_tests_1 import data_iterator_1
+from src.config import settings
+from src.database import Base, engine_null_pool, async_session_maker_null_pool
+from src.main import app
+from src.schemas.hotels import HotelAdd
+from src.schemas.rooms import RoomAdd
+from src.utils.db_manager import DBManager
+
+
+@pytest.fixture()
+async def db() -> DBManager:
+    async with DBManager(session_factory=async_session_maker_null_pool) as db:
+        yield db
+
+
+@pytest.fixture(scope="session")
+async def ac() -> AsyncClient:
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://test",
+    ) as ac:
+        yield ac
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -16,61 +35,26 @@ async def async_main():
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
+    with open("tests/mock_hotels.json", encoding="utf-8") as file_hotels:
+        hotels = json.load(file_hotels)
+    with open("tests/mock_rooms.json", encoding="utf-8") as file_rooms:
+        rooms = json.load(file_rooms)
 
-# @pytest.fixture(scope="session", autouse=True)
-# async def test_root():
-#     async with AsyncClient(
-#         transport=ASGITransport(app=app),
-#         base_url="http://test",
-#     ) as ac:
-#         await ac.post(
-#             "/auth/register",
-#             json={
-#                 "email": "kot@pes.com",
-#                 "password": "1234",
-#             },
-#         )
+    hotels = [HotelAdd.model_validate(hotel) for hotel in hotels]
+    rooms = [RoomAdd.model_validate(room) for room in rooms]
+
+    async with DBManager(session_factory=async_session_maker_null_pool) as db_:
+        await db_.hotels.add_bulk(hotels)
+        await db_.rooms.add_bulk(rooms)
+        await db_.commit()
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def test_root():
-    base_url = "http://test"
-
-    async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url=base_url,
-    ) as ac:
-        for data in data_iterator():
-            endpoint = data["endpoint"]
-            json_data = data["json_data"]
-
-            # Отправка POST-запроса с данными по выбранному адресу
-            await ac.post(
-                endpoint,
-                json=json_data,
-            )
-
-
-# @pytest.fixture(scope="session", autouse=True)
-# async def test_root():
-#     async with AsyncClient(
-#         transport=ASGITransport(app=app),
-#         base_url="http://test",
-#     ) as ac:
-#         await ac.post(
-#             "/hotels",
-#             json=[
-#                 {
-#                     "title": "Cosmos Collection Altay Resort",
-#                     "location": "Республика Алтай, Майминский район, село Урлу-Аспак, Лесхозная улица, 20",
-#                 },
-#                 {
-#                     "title": "Skala",
-#                     "location": "Республика Алтай, Майминский район, поселок Барангол, Чуйская улица 40а",
-#                 },
-#                 {
-#                     "title": "Bridge Resort",
-#                     "location": "посёлок городского типа Сириус, Фигурная улица, 45",
-#                 },
-#             ],
-#         )
+async def test_root(ac):
+    await ac.post(
+        "/auth/register",
+        json={
+            "email": "kot@pes.com",
+            "password": "1234",
+        },
+    )
