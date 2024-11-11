@@ -23,28 +23,17 @@ async def get_db_null_pool():
         yield db
 
 
-app.dependency_overrides[get_db] = get_db_null_pool
-
-
-@pytest.fixture()
+@pytest.fixture(scope="function")
 async def db() -> DBManager:
-    async for db in get_db_null_pool():
+    async with DBManager(session_factory=async_session_maker_null_pool) as db:
         yield db
 
 
-@pytest.fixture(scope="session")
-async def ac() -> AsyncClient:
-    async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url="http://test",
-    ) as ac:
-        yield ac
+app.dependency_overrides[get_db] = get_db_null_pool
 
 
 @pytest.fixture(scope="session", autouse=True)
-async def async_main():
-    print("Я ФИКСТУРА")
-    assert settings.MODE == "TEST"
+async def setup_database(check_test_mode):
     async with engine_null_pool.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
@@ -63,12 +52,12 @@ async def async_main():
         await db_.commit()
 
 
+@pytest.fixture(scope="session")
+async def ac() -> AsyncClient:
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
+
+
 @pytest.fixture(scope="session", autouse=True)
-async def test_root(ac):
-    await ac.post(
-        "/auth/register",
-        json={
-            "email": "kot@pes.com",
-            "password": "1234",
-        },
-    )
+async def register_user(ac, setup_database):
+    await ac.post("/auth/register", json={"email": "kot@pes.com", "password": "1234"})

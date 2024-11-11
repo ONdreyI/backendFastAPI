@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("", name="Получение списка отелей по сортировке")
-@cache(expire=800)
+# @cache(expire=800)
 async def get_hotels(
     pagination: PaginationDep,
     db: DBDep,
@@ -40,7 +40,6 @@ async def get_hotels(
 
 
 @router.get("/{hotel_id}", name="Получение одного отеля")
-# @cache(expire=10)
 async def get_hotel(
     hotel_id: int,
     db: DBDep,
