@@ -62,4 +62,29 @@ async def ac() -> AsyncClient:
 
 @pytest.fixture(scope="session", autouse=True)
 async def register_user(ac, setup_database):
-    await ac.post("/auth/register", json={"email": "kot@pes.com", "password": "1234"})
+    await ac.post(
+        "/auth/register",
+        json={
+            "email": "kot@pes.com",
+            "password": "1234",
+        },
+    )
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def login(ac, register_user):
+    # Аутентификация пользователя
+    response = await ac.post(
+        "/auth/login",
+        json={
+            "email": "kot@pes.com",
+            "password": "1234",
+        },
+    )
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+
+    # Добавление токена в заголовки запросов
+    ac.headers.update({"Authorization": f"Bearer {token}"})
+
+    yield ac
