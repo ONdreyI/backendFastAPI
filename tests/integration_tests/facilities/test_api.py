@@ -21,3 +21,5 @@ async def test_get_facilities(ac):
     )
     print(f"{response.json()=}")
     assert response.status_code == 200
+    assert isinstance(response.json(), list)
+    assert response.json()[0] == {"id": 1, "title": "WiFi"}
