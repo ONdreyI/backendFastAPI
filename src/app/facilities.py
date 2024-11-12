@@ -22,7 +22,7 @@ router = APIRouter(
 
 
 @router.get("")
-@cache(expire=800)
+# @cache(expire=800)
 async def get_facilities(db: DBDep):
     print("ИДУ В БАЗУ ДАННЫХ")
     return await db.facilities.get_all()
