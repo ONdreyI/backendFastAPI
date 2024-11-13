@@ -17,6 +17,7 @@ async def test_booking_crud(db):
     booking = await db.bookings.get_one_or_none(id=new_booking.id)
     assert booking
     assert booking.id == new_booking.id
+    assert booking.room_id == new_booking.room_id
     assert booking.user_id == new_booking.user_id
     # а еще можно вот так разом сравнить все параметры
     assert booking.model_dump(exclude={"id"}) == booking_data.model_dump()

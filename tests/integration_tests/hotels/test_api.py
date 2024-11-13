@@ -2,7 +2,7 @@ async def test_get_hotels(ac):
     response = await ac.get(
         "/hotels",
         params={
-            "date_from": "2024-01-01",
+            "date_from": "2023-12-12",
             "date_to": "2024-01-10",
         },
     )

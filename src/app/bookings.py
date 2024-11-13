@@ -37,30 +37,7 @@ async def get_rooms(
 async def create_room(
     db: DBDep,
     user_id: int,
-    booking_data: BookingAddRequest = Body(
-        openapi_examples={
-            "1": {
-                "summary": "Sochi Hotel",
-                "value": {
-                    "room_id": 4,
-                    "date_from": "2024-10-05",
-                    "date_to": "2024-10-25",
-                    "description": "A luxurious room in Sochi Hotel",
-                },
-            },
-            "2": {
-                "summary": "Dubai Hotel",
-                "value": {
-                    "room_id": 9,
-                    "user_id": 8,
-                    "date_from": "2024-11-05",
-                    "date_to": "2024-11-25",
-                    "description": "A luxurious room in Sochi Hotel",
-                    "price": 100,
-                },
-            },
-        }
-    ),
+    booking_data: BookingAddRequest,
 ):
     # Получить схему номера
     # Создать схему данных BookingAdd
