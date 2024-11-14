@@ -36,7 +36,7 @@ async def get_rooms(
 )
 async def create_room(
     db: DBDep,
-    user_id: int,
+    user_id: UserIdDep,
     booking_data: BookingAddRequest,
 ):
     # Получить схему номера
