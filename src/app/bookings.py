@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import APIRouter, Query, Body
 from src.app.dependencies import PaginationDep, DBDep, UserIdDep
 from src.schemas.bookings import (
@@ -30,27 +32,45 @@ async def get_rooms(
     return await db.bookings.get_filtered(user_id=user_id)
 
 
+# @router.post(
+#     "",
+#     name="Add booking data",
+# )
+# async def create_room(
+#     db: DBDep,
+#     user_id: UserIdDep,
+#     booking_data: BookingAddRequest,
+# ):
+#     # Получить схему номера
+#     # Создать схему данных BookingAdd
+#     # добавить бронирование конкретному пользователю.
+#     room = await db.rooms.get_one_or_none(id=booking_data.room_id)
+#     room_price: int = room.price
+#     _booking_data = BookingAdd(
+#         user_id=user_id,
+#         price=room_price,
+#         **booking_data.model_dump(),
+#     )
+#     booking = await db.bookings.add(_booking_data)
+#     await db.commit()
+#     return {"status": "Ok", "data": booking}
+
+
 @router.post(
     "",
     name="Add booking data",
 )
-async def create_room(
+async def create_booking(
     db: DBDep,
-    user_id: UserIdDep,
-    booking_data: BookingAddRequest,
+    hotel_id: int,
+    date_from: date,
+    date_to: date,
 ):
-    # Получить схему номера
-    # Создать схему данных BookingAdd
-    # добавить бронирование конкретному пользователю.
-    room = await db.rooms.get_one_or_none(id=booking_data.room_id)
-    room_price: int = room.price
-    _booking_data = BookingAdd(
-        user_id=user_id,
-        price=room_price,
-        **booking_data.model_dump(),
+    booking = await db.bookings.add_booking(
+        hotel_id=hotel_id,
+        date_from=date_from,
+        date_to=date_to,
     )
-    booking = await db.bookings.add(_booking_data)
-    await db.commit()
     return {"status": "Ok", "data": booking}
 
 
