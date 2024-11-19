@@ -25,7 +25,7 @@ async def get_hotel(
 
 
 @router.get("/me", name="Получение только своих бронирований")
-async def get_rooms(
+async def get_bookings(
     db: DBDep,
     user_id: UserIdDep,
 ):

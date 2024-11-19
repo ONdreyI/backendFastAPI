@@ -1,13 +1,6 @@
 import pytest
 
-from src.database import async_session_maker_null_pool
-from src.utils.db_manager import DBManager
-
-
-@pytest.fixture(scope="function")
-async def bookings_on_delete_all(db):
-    await db.bookings.delete_all()
-    await db.commit()
+from tests.conftest import get_db_null_pool
 
 
 @pytest.mark.parametrize(
@@ -48,32 +41,31 @@ async def test_add_booking(
         assert "data" in res
 
 
+@pytest.fixture(scope="module")
+async def delete_all_bookings():
+    async for _db in get_db_null_pool():
+        await _db.bookings.delete_all()
+        await _db.commit()
+
+
 @pytest.mark.parametrize(
-    "room_id, date_from, date_to, status_code",
-    # [
-    #     (1, "2025-08-01", "2025-08-10"),
-    # ],
+    "room_id, date_from, date_to, booked_rooms",
     [
-        (1, "2025-08-01", "2025-08-10", 200),
-        (1, "2025-08-20", "2025-08-30", 200),
+        (1, "2024-08-01", "2024-08-10", 1),
+        (1, "2024-08-02", "2024-08-11", 2),
+        (1, "2024-08-03", "2024-08-12", 3),
     ],
-    # [
-    #     (1, "2024-08-01", "2024-08-05", 200),
-    #     (1, "2024-08-07", "2024-08-09", 200),
-    #     (1, "2024-08-10", "2024-08-15", 200),
-    # ],
 )
-async def test_add_get_bookings(
-    bookings_on_delete_all,
+async def test_add_and_get_my_bookings(
     room_id,
     date_from,
     date_to,
-    status_code,
-    db,
+    booked_rooms,
+    delete_all_bookings,
     authenticated_ac,
 ):
     # room_id = (await db.rooms.get_all())[0].id
-    await authenticated_ac.post(
+    response = await authenticated_ac.post(
         "/bookings",
         json={
             "room_id": room_id,
@@ -81,7 +73,7 @@ async def test_add_get_bookings(
             "date_to": date_to,
         },
     )
-    response = authenticated_ac.get(
-        "/bookings/me",
-    )
-    assert "data" in response
+    assert response.status_code == 200
+    response_my_bookings = authenticated_ac.get("/bookings/me")
+    # assert response_my_bookings.status_code == 200
+    assert len(response_my_bookings.json()) == booked_rooms

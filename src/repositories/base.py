@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
 
@@ -17,7 +19,7 @@ class BaseRepository:
         limit=None,
         offset=None,
         **filter_by,
-    ):
+    ) -> list[BaseModel | Any]:
 
         query = select(self.model).filter(*filter).filter_by(**filter_by)
         query = query.limit(limit).offset(offset)
