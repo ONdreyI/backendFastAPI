@@ -46,7 +46,7 @@ async def login_user(
         key="access_token",
         value=access_token,
     )
-    return {"access_token": access_token}
+    return {"access_token": access_token, "status": "OK"}
 
 
 @router.get("/me")
