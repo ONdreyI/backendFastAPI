@@ -74,6 +74,6 @@ async def test_add_and_get_my_bookings(
         },
     )
     assert response.status_code == 200
-    response_my_bookings = authenticated_ac.get("/bookings/me")
-    # assert response_my_bookings.status_code == 200
+    response_my_bookings = await authenticated_ac.get("/bookings/me")
+    assert response_my_bookings.status_code == 200
     assert len(response_my_bookings.json()) == booked_rooms
