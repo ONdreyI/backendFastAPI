@@ -1,7 +1,11 @@
-from sqlalchemy import String, ForeignKey, Sequence
+import typing
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
+
+if typing.TYPE_CHECKING:
+    from src.models import RoomsOrm
 
 
 class RoomsFacilitiesOrm(Base):

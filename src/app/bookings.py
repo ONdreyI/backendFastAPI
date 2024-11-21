@@ -1,15 +1,10 @@
-from datetime import date
+from fastapi import APIRouter
 
-from fastapi import APIRouter, Query, Body
-from src.app.dependencies import PaginationDep, DBDep, UserIdDep
+from src.app.dependencies import DBDep, UserIdDep
 from src.schemas.bookings import (
-    Booking,
     BookingAdd,
     BookingAddRequest,
-    BookingPatch,
-    BookingPatchRequest,
 )
-
 
 router = APIRouter(
     prefix="/bookings",

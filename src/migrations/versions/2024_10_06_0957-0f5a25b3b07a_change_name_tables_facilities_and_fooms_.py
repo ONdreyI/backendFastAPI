@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 """change name tables facilities and fooms_facilities
 
 Revision ID: 0f5a25b3b07a
@@ -7,13 +8,13 @@ Create Date: 2024-10-06 09:57:24.983302
 """
 from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
+from alembic import op  # noqa
+import sqlalchemy as sa  # noqa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '0f5a25b3b07a'
-down_revision: Union[str, None] = 'c268a4407d40'
+revision: str = "0f5a25b3b07a"
+down_revision: Union[str, None] = "c268a4407d40"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

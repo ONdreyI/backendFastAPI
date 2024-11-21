@@ -1,4 +1,4 @@
-from pydantic import Field, BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserRequestAdd(BaseModel):

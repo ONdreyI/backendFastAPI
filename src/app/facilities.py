@@ -1,18 +1,10 @@
-from datetime import date
-import json
+from fastapi import APIRouter, Body
 from fastapi_cache.decorator import cache
 
-from fastapi import APIRouter, Query, Body
-from src.app.dependencies import PaginationDep, DBDep
-from src.init import redis_manager
+from src.app.dependencies import DBDep
 from src.schemas.facilities import (
-    Facilities,
     FacilitiesAdd,
 )
-
-from src.database import async_session_maker
-
-from src.repositories.rooms import RoomsRepository
 from src.tasks.tasks import test_task
 
 router = APIRouter(

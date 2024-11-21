@@ -1,4 +1,4 @@
-from src.schemas.facilities import FacilitiesAdd
+from src.schemas.facilities import FacilitiesAdd  # noqa
 
 
 # async def test_facilities_crud(db):

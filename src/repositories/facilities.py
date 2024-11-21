@@ -6,7 +6,6 @@ from src.repositories.mappers.mappers import (
     FacilityDataMapper,
     RoomFacilityDataMapper,
 )
-from src.schemas.facilities import RoomFacility
 
 
 class FacilitiesRepository(BaseRepository):

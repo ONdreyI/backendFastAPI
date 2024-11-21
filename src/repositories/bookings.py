@@ -2,13 +2,10 @@ from datetime import date
 
 from fastapi import HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
-from src.database import session
-from src.models import RoomsOrm
 from src.models.bookings import BookingsOrm
 from src.repositories.base import BaseRepository
-from src.repositories.mappers.mappers import BookingDataMapper, RoomDataWithRelsMapper
+from src.repositories.mappers.mappers import BookingDataMapper
 from src.repositories.utils import rooms_ids_for_booking
 from src.schemas.bookings import BookingAdd
 

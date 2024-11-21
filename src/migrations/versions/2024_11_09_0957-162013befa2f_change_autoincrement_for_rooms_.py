@@ -1,3 +1,4 @@
+# ruff: noga: F401
 """change autoincrement for rooms_facilities
 
 Revision ID: 162013befa2f
@@ -7,13 +8,13 @@ Create Date: 2024-11-09 09:57:44.313334
 """
 from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
+from alembic import op  # noqa
+import sqlalchemy as sa  # noqa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '162013befa2f'
-down_revision: Union[str, None] = '4f8ce37dba7f'
+revision: str = "162013befa2f"
+down_revision: Union[str, None] = "4f8ce37dba7f"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

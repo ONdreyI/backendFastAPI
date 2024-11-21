@@ -1,4 +1,4 @@
-from pydantic import Field, BaseModel, ConfigDict
+from pydantic import Field, BaseModel
 
 
 class HotelAdd(BaseModel):
