@@ -21,6 +21,7 @@ async def test_auth(
     status_code: int,
     ac: AsyncClient,
 ):
+    # Register user
     res_register = await ac.post(
         "/auth/register",
         json={
@@ -30,6 +31,7 @@ async def test_auth(
     )
     assert res_register.status_code == status_code
 
+    # Login user
     res_login = await ac.post(
         "/auth/login",
         json={
@@ -40,19 +42,26 @@ async def test_auth(
     assert res_login.status_code == status_code
     if res_login.status_code == 200:
         assert res_login.json()["access_token"]
+    else:
+        return
 
-        res_me = await ac.get(
-            "/auth/me",
-            headers={"Authorization": f"Bearer {res_login.json()['access_token']}"},
-        )
-        assert res_me.status_code == 200
-        # print(res_me.json()["user"]["email"])
-        assert res_me.json()["user"]["email"] == email
-        assert ac.cookies["access_token"]
+    # Get user info after login
+    res_me = await ac.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {res_login.json()['access_token']}"},
+    )
+    assert res_me.status_code == 200
+    # print(res_me.json()["user"]["email"])
+    assert res_me.json()["user"]["email"] == email
+    assert ac.cookies["access_token"]
+    assert "password" not in res_me.json()["user"]
+    assert "hashed_password" not in res_me.json()["user"]
+    assert "id" in res_me.json()["user"]
 
-        res_logout = await ac.post(
-            "/auth/logout",
-            headers={"Authorization": f"Bearer {res_login.json()['access_token']}"},
-        )
-        assert res_logout.status_code == 200
-        assert "access_token" not in ac.cookies
+    # Logout user
+    res_logout = await ac.post(
+        "/auth/logout",
+        headers={"Authorization": f"Bearer {res_login.json()['access_token']}"},
+    )
+    assert res_logout.status_code == 200
+    assert "access_token" not in ac.cookies
