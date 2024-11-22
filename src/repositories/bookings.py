@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Sequence
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -32,7 +33,7 @@ class BookingsRepository(BaseRepository):
             hotel_id=hotel_id,
         )
         rooms_ids_to_books_res = await self.session.execute(rooms_ids_to_get)
-        rooms_ids_to_books: list[int] = rooms_ids_to_books_res.scalars().all()
+        rooms_ids_to_books: Sequence[int] = rooms_ids_to_books_res.scalars().all()
 
         if data.room_id in rooms_ids_to_books:
             new_booking = await self.add(data)

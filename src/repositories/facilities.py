@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlalchemy import insert, select, delete
 
 from src.models.facilities import FacilitiesOrm, RoomsFacilitiesOrm
@@ -14,7 +16,7 @@ class FacilitiesRepository(BaseRepository):
 
 
 class RoomsFacilitiesRepository(BaseRepository):
-    model = RoomsFacilitiesOrm
+    model: RoomsFacilitiesOrm = RoomsFacilitiesOrm
     mapper = RoomFacilityDataMapper
 
     async def set_room_facilities(
@@ -27,7 +29,7 @@ class RoomsFacilitiesRepository(BaseRepository):
         )
         res = await self.session.execute(get_current_facilities_ids_query)
 
-        current_facilities_ids: list[int] = res.scalars().all()
+        current_facilities_ids: Sequence[int] = res.scalars().all()
         ids_to_delete: list[int] = list(
             set(current_facilities_ids) - set(facilities_ids)
         )

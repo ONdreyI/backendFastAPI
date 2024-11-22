@@ -52,7 +52,7 @@ async def create_room(
 
     facility = await db.facilities.add(facilities_data)
     await db.commit()
-    test_task.delay()
+    test_task.delay()  # type: ignore
     return {"status": "Ok", "data": facility}
 
 

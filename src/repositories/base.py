@@ -1,16 +1,19 @@
-from typing import Any
+from typing import Any, Sequence
 
 from sqlalchemy import select, insert, delete, update
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.database import Base
 from src.repositories.mappers.base import DataMapper
 
 
 class BaseRepository:
-    model = None
-    mapper: DataMapper = None
+    model: type[Base]
+    mapper: type[DataMapper]
+    session: AsyncSession
 
-    def __init__(self, session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_filtered(
@@ -28,10 +31,10 @@ class BaseRepository:
             self.mapper.map_to_domain_entity(model) for model in result.scalars().all()
         ]
 
-    async def get_all(self, *args):
+    async def get_all(self, *args) -> list[BaseModel | Any]:
         return await self.get_filtered()
 
-    async def get_one_or_none(self, **filter_by):
+    async def get_one_or_none(self, **filter_by) -> BaseModel | None | Any:
         query = select(self.model).filter_by(**filter_by)
         result = await self.session.execute(query)
         model = result.scalars().one_or_none()
@@ -39,7 +42,7 @@ class BaseRepository:
             return None
         return self.mapper.map_to_domain_entity(model)
 
-    async def add(self, data: BaseModel):
+    async def add(self, data: BaseModel) -> BaseModel | Any:
         add_data_stmt = (
             insert(self.model).values(**data.model_dump()).returning(self.model)
         )
@@ -47,7 +50,7 @@ class BaseRepository:
         model = result.scalars().one()
         return self.mapper.map_to_domain_entity(model)
 
-    async def add_bulk(self, data: list[BaseModel]):
+    async def add_bulk(self, data: Sequence[BaseModel]):
         add_data_stmt = insert(self.model).values([item.model_dump() for item in data])
         await self.session.execute(add_data_stmt)
 
