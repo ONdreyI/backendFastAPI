@@ -1,9 +1,11 @@
 from datetime import date
 
-from fastapi import APIRouter, Query, Body
+from fastapi import APIRouter, Query, Body, HTTPException
 from fastapi_cache.decorator import cache
+from sqlalchemy import null
 
 from src.app.dependencies import PaginationDep, DBDep
+from src.exceptions import ObjectNotFoundException, DateToBeforeDateFrom
 from src.schemas.hotels import HotelAdd, HotelPATCH
 
 router = APIRouter(
@@ -22,6 +24,10 @@ async def get_hotels(
     date_from: date = Query(examples=["2024-11-09"]),
     date_to: date = Query(examples=["2024-11-10"]),
 ):
+    try:
+        date_from > date_to
+    except DateToBeforeDateFrom:
+        raise HTTPException(status_code=400, detail="Дата начала больше даты конца")
     per_page = pagination.per_page or 5
     # return await db.hotels.get_all(
     #     location,
@@ -44,10 +50,11 @@ async def get_hotel(
     hotel_id: int,
     db: DBDep,
 ):
-    hotel = await db.hotels.get_one_or_none(id=hotel_id)
-    if not hotel:
-        return {"error": "Hotel not found"}
-    return hotel
+    try:
+        hotel = await db.hotels.get_one(id=hotel_id)
+    except ObjectNotFoundException:
+        raise HTTPException(status_code=400, detail="Отель не найден")
+    return {"status": "OK", "Hotel": hotel}
 
 
 @router.post("", name="Add hotel data")

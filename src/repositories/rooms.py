@@ -1,8 +1,10 @@
 from datetime import date
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload, joinedload
 
+from src.exceptions import ObjectNotFoundException, NoFreeRoomsException
 from src.models.rooms import RoomsOrm
 from src.repositories.base import BaseRepository
 from src.repositories.mappers.mappers import (
@@ -37,18 +39,20 @@ class RoomsRepository(BaseRepository):
 
     async def get_one_or_none_with_facilities(
         self,
-        room_id: int,
+        room_id,
+        hotel_id,
     ):
         query = (
             select(RoomsOrm)
             .options(joinedload(RoomsOrm.facilities))
-            .filter(RoomsOrm.id == room_id)
+            .filter(RoomsOrm.id == room_id, RoomsOrm.hotel_id == hotel_id)
         )
         result = await self.session.execute(query)
-        room = result.unique().scalars().first()
 
+        room = result.unique().scalars().first()
         if room:
-            room_with_facilities = RoomDataWithRelsMapper.map_to_domain_entity(room)
-            return room_with_facilities
+            room = RoomDataWithRelsMapper.map_to_domain_entity(room)
+
+            return room
         else:
-            return None
+            return {"Такого номера не существует"}

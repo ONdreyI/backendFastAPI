@@ -1,8 +1,9 @@
 from datetime import date
 
-from fastapi import APIRouter, Query, Body
+from fastapi import APIRouter, Query, Body, HTTPException
 
 from src.app.dependencies import DBDep
+from src.exceptions import ObjectNotFoundException
 from src.schemas.facilities import RoomFacilityAdd
 from src.schemas.rooms import (
     RoomAdd,
@@ -35,7 +36,12 @@ async def get_hotel(
     hotel_id: int,
     room_id: int,
 ):
-    return await db.rooms.get_one_or_none_with_facilities(room_id=room_id)
+
+    room = await db.rooms.get_one_or_none_with_facilities(
+        room_id=room_id, hotel_id=hotel_id
+    )
+
+    return {"status": "OK", "Room": room}
 
 
 @router.post("/{hotel_id}/rooms", name="Add room data")
@@ -67,6 +73,10 @@ async def create_room(
         }
     ),
 ):
+    try:
+        await db.hotels.get_one(id=hotel_id)
+    except ObjectNotFoundException:
+        raise HTTPException(status_code=400, detail="Отель не найден")
     _room_data = RoomAdd(hotel_id=hotel_id, **room_data.model_dump())
     room = await db.rooms.add(_room_data)
     rooms_facilities_data = [
@@ -108,6 +118,10 @@ async def patch_hotel(
     room_id: int,
     room_data: RoomPatchRequest,
 ):
+    try:
+        await db.rooms.get_one(id=room_id)
+    except ObjectNotFoundException:
+        raise HTTPException(status_code=400, detail="Такого номера нет")
     _room_data_dict = room_data.model_dump(exclude_unset=True)
     _room_data = RoomPatch(hotel_id=hotel_id, **_room_data_dict)
     await db.rooms.update(
@@ -131,6 +145,10 @@ async def delete_hotel(
     hotel_id: int,
     room_id: int,
 ):
+    try:
+        await db.rooms.get_one(id=room_id)
+    except ObjectNotFoundException:
+        raise HTTPException(status_code=400, detail="Такого номера нет")
     await db.rooms.delete_data(id=room_id, hotel_id=hotel_id)
     await db.commit()
     return {"status": "deleted"}
