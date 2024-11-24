@@ -3,8 +3,10 @@ from fastapi import (
     HTTPException,
     Response,
 )
+from sqlalchemy.exc import IntegrityError
 
 from src.app.dependencies import UserIdDep, DBDep
+from src.exceptions import ObjectAlreadyExistsException
 from src.schemas.users import (
     UserRequestAdd,
     UserAdd,
@@ -21,8 +23,14 @@ async def register_user(
 ):
     hashed_password = AuthService().pwd_context.hash(data.password)
     new_user_deta = UserAdd(email=data.email, hashed_password=hashed_password)
-    await db.users.add(new_user_deta)
-    await db.commit()
+    try:
+        await db.users.add(new_user_deta)
+        await db.commit()
+    except IntegrityError:
+        raise HTTPException(
+            status_code=409, detail="Пользователь с таким email уже существует"
+        )
+
     return {"status": "available"}
 
 

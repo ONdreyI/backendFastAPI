@@ -3,7 +3,7 @@ from datetime import date
 from fastapi import APIRouter, Query, Body, HTTPException
 
 from src.app.dependencies import DBDep
-from src.exceptions import ObjectNotFoundException
+from src.exceptions import ObjectNotFoundException, check_date_to_before_date_from
 from src.schemas.facilities import RoomFacilityAdd
 from src.schemas.rooms import (
     RoomAdd,
@@ -25,6 +25,7 @@ async def get_rooms(
     date_from: date = Query(examples=["2024-11-09"]),
     date_to: date = Query(examples=["2024-11-10"]),
 ):
+    check_date_to_before_date_from(date_from, date_to)
     return await db.rooms.get_filtered_by_time(
         hotel_id=hotel_id, date_from=date_from, date_to=date_to
     )

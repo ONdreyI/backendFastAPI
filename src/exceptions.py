@@ -1,3 +1,8 @@
+from datetime import date
+
+from fastapi import HTTPException
+
+
 class NabronirovalException(Exception):
     detail = "Неожиданная ошибка"
 
@@ -19,3 +24,14 @@ class AllRoomsAreBookedException(NabronirovalException):
 
 class DateToBeforeDateFrom(NabronirovalException):
     detail = "Дата начала бронирования должна быть раньше даты окончания"
+
+
+class ObjectAlreadyExistsException(NabronirovalException):
+    detail = "Объект уже существует"
+
+
+def check_date_to_before_date_from(date_from: date, date_to: date) -> None:
+    if date_to <= date_from:
+        raise HTTPException(
+            status_code=422, detail="Дата заезда не может быть позже даты выезда"
+        )

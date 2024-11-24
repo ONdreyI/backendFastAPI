@@ -5,7 +5,11 @@ from fastapi_cache.decorator import cache
 from sqlalchemy import null
 
 from src.app.dependencies import PaginationDep, DBDep
-from src.exceptions import ObjectNotFoundException, DateToBeforeDateFrom
+from src.exceptions import (
+    ObjectNotFoundException,
+    DateToBeforeDateFrom,
+    check_date_to_before_date_from,
+)
 from src.schemas.hotels import HotelAdd, HotelPATCH
 
 router = APIRouter(
@@ -24,10 +28,7 @@ async def get_hotels(
     date_from: date = Query(examples=["2024-11-09"]),
     date_to: date = Query(examples=["2024-11-10"]),
 ):
-    try:
-        date_from > date_to
-    except DateToBeforeDateFrom:
-        raise HTTPException(status_code=400, detail="Дата начала больше даты конца")
+    check_date_to_before_date_from(date_from, date_to)
     per_page = pagination.per_page or 5
     # return await db.hotels.get_all(
     #     location,
