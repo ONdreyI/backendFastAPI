@@ -14,8 +14,20 @@ class RoomsFacilitiesOrm(Base):
         primary_key=True,
         autoincrement=True,
     )
-    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
-    facility_id: Mapped[int] = mapped_column(ForeignKey("facilities.id"))
+    room_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "rooms.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        )
+    )
+    facility_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "facilities.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        )
+    )
 
 
 class FacilitiesOrm(Base):
