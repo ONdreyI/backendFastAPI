@@ -5,6 +5,7 @@ from src.app.dependencies import DBDep
 from src.schemas.facilities import (
     FacilitiesAdd,
 )
+from src.services.facilities import FacilitiesService
 from src.tasks.tasks import test_task
 
 router = APIRouter(
@@ -50,9 +51,7 @@ async def create_room(
     ),
 ):
 
-    facility = await db.facilities.add(facilities_data)
-    await db.commit()
-    test_task.delay()  # type: ignore
+    facility = await FacilitiesService(db).create_facilities(facilities_data)
     return {"status": "Ok", "data": facility}
 
 
