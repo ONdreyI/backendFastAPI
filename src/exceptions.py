@@ -56,6 +56,11 @@ class RoomNotFoundHTTPException(NabronirovalHTTPException):
     detail = "Номер не найден"
 
 
+class AllRoomsAreBookedHTTPException(NabronirovalHTTPException):
+    status_code = 409
+    detail = "Не осталось свободных номеров"
+
+
 def check_date_to_before_date_from(date_from: date, date_to: date) -> None:
     if date_to <= date_from:
         raise HTTPException(
