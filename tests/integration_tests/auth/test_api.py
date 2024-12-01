@@ -45,18 +45,14 @@ async def test_auth(
     else:
         return
 
-    # Get user info after login
-    res_me = await ac.get(
-        "/auth/me",
-        headers={"Authorization": f"Bearer {res_login.json()['access_token']}"},
-    )
-    assert res_me.status_code == 200
-    # print(res_me.json()["user"]["email"])
-    assert res_me.json()["user"]["email"] == email
-    assert ac.cookies["access_token"]
-    assert "password" not in res_me.json()["user"]
-    assert "hashed_password" not in res_me.json()["user"]
-    assert "id" in res_me.json()["user"]
+        # /me
+        resp_me = await ac.get("/auth/me")
+        assert resp_me.status_code == 200
+        user = resp_me.json()
+        assert user["email"] == email
+        assert "id" in user
+        assert "password" not in user
+        assert "hashed_password" not in user
 
     # Logout user
     res_logout = await ac.post(

@@ -38,6 +38,22 @@ class HotelNotFoundException(NabronirovalException):
     detail = "Отель не найден"
 
 
+class IncorrectTokenException(NabronirovalException):
+    detail = "Некорректный токен"
+
+
+class UserAlreadyExistsException(NabronirovalException):
+    detail = "Пользователь уже существует"
+
+
+class EmailNotRegisteredException(NabronirovalException):
+    detail = "Пользователь с таким email не зарегистрирован"
+
+
+class IncorrectPasswordException(NabronirovalException):
+    detail = "Пароль неверный"
+
+
 class NabronirovalHTTPException(HTTPException):
     status_code = 500
     detail = None
@@ -59,6 +75,30 @@ class RoomNotFoundHTTPException(NabronirovalHTTPException):
 class AllRoomsAreBookedHTTPException(NabronirovalHTTPException):
     status_code = 409
     detail = "Не осталось свободных номеров"
+
+
+class UserEmailAlreadyExistsHTTPException(NabronirovalHTTPException):
+    status_code = 409
+    detail = "Пользователь с такой почтой уже существует"
+
+
+class EmailNotRegisteredHTTPException(NabronirovalHTTPException):
+    status_code = 401
+    detail = "Пользователь с таким email не зарегистрирован"
+
+
+class IncorrectPasswordHTTPException(NabronirovalHTTPException):
+    status_code = 401
+    detail = "Пароль неверный"
+
+
+class NoAccessTokenHTTPException(NabronirovalHTTPException):
+    status_code = 401
+    detail = "Вы не предоставили токен доступа"
+
+
+class IncorrectTokenHTTPException(NabronirovalHTTPException):
+    detail = "Некорректный токен"
 
 
 def check_date_to_before_date_from(date_from: date, date_to: date) -> None:
