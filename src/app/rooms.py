@@ -82,7 +82,7 @@ async def create_room(
     ),
 ):
     try:
-        room = RoomService(db).create_room(
+        room = await RoomService(db).create_room(
             hotel_id,
             room_data,
         )
