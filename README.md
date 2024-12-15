@@ -1,3 +1,6 @@
+git config user.name "Andrey Ivanov"
+git config user.email "ai3501669@gmail.com"
+
 
 docker network create myNetwork
 
