@@ -32,3 +32,17 @@ docker run --name booking_celery_beat `
     --network=myNetwork `
     booking_image `
     celery --app=src.tasks.celery_app:celery_instance worker -l INFO -B
+
+
+# Nginx
+# Без SSL (https):
+
+docker run --name booking_nginx `
+    --volume ./nginx.conf:/etc/nginx/nginx.conf `
+    --network=myNetwork `
+    --rm -p 80:80 nginx
+
+docker run --name booking_nginx `
+    --volume ${PWD}\nginx.conf:/etc/nginx/nginx.conf `
+    --network=myNetwork `
+    -d -p 80:80 nginx
