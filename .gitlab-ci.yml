@@ -5,21 +5,12 @@ stages:
 build-job:
   stage: build
   before_script:
-    - echo "Copying environment files..."
-    - echo "ENV variable - $ENV"
-    - echo "ENV_TEST variable - $ENV_TEST"
-    - cp ${ENV} .env || echo "Warning - ${ENV} not found"
-    - cp ${ENV_TEST} .env-test || echo "Warning - ${ENV_TEST} not found"
+    - cp ${ENV} .env
+    - cp ${ENV_TEST} .env-test
   script:
-    - echo "Building Docker image..."
     - docker build -t booking-api-image .
-    - echo "Listing files in the current directory:"
-    - ls -la
-    - echo "Environment variables:"
-    - printenv
 
 deploy-job:
   stage: deploy
   script:
-    - echo "Starting Docker Compose..."
     - docker compose -f docker-compose-ci.yml up -d
