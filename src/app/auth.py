@@ -53,7 +53,7 @@ async def login_user(
     return {"access_token": access_token}
 
 
-@router.get("/me")
+@router.get("/me", summary="🧑‍💻 Мой профиль")
 async def get_me(
     user_id: UserIdDep,
     db: DBDep,
