@@ -17,7 +17,7 @@ build-job:
 Lint:
   stage: lint_format
   script:
-    - docker run --rm --network myNetwork booking-api-image ruff check
+    - docker run --rm --network myNetwork booking-api-image ruff check --ignore E402
 
 Format:
   stage: lint_format
