@@ -17,4 +17,4 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install --no-cache-dir -r req
 COPY . .
 
 # Команда для запуска приложения
-CMD ["sh", "-c", "alembic upgrade head; python src/main.py"]
+CMD alembic upgrade head; python src/main.py
