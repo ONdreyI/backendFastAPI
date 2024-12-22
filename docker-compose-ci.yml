@@ -4,8 +4,7 @@ services:
     image: booking-api-image:latest
     networks:
       - myNetwork
-    env_file:
-      - .env
+
   booking_celery_worker_service:
     container_name: 'booking_celery_worker'
     image: booking-api-image:latest
