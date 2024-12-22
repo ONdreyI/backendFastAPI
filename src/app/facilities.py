@@ -6,7 +6,6 @@ from src.schemas.facilities import (
     FacilitiesAdd,
 )
 from src.services.facilities import FacilitiesService
-from src.tasks.tasks import test_task
 
 router = APIRouter(
     prefix="/facilities",
@@ -50,7 +49,6 @@ async def create_room(
         }
     ),
 ):
-
     facility = await FacilitiesService(db).create_facilities(facilities_data)
     return {"status": "Ok", "data": facility}
 

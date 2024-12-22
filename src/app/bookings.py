@@ -1,17 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from src.app.dependencies import DBDep, UserIdDep
 from src.exceptions import (
-    ObjectNotFoundException,
     AllRoomsAreBookedException,
     AllRoomsAreBookedHTTPException,
 )
 from src.schemas.bookings import (
-    BookingAdd,
     BookingAddRequest,
 )
-from src.schemas.hotels import Hotel
-from src.schemas.rooms import Room
 from src.services.bookings import BookingService
 
 router = APIRouter(

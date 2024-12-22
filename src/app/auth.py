@@ -1,9 +1,7 @@
 from fastapi import (
     APIRouter,
-    HTTPException,
     Response,
 )
-from sqlalchemy.exc import IntegrityError
 
 from src.app.dependencies import UserIdDep, DBDep
 from src.exceptions import (
@@ -16,7 +14,6 @@ from src.exceptions import (
 )
 from src.schemas.users import (
     UserRequestAdd,
-    UserAdd,
 )
 from src.services.auth import AuthService
 

@@ -31,7 +31,6 @@ class RoomService(BaseService):
         hotel_id: int,
         room_id: int,
     ):
-
         return await self.db.rooms.get_one_or_none_with_facilities(
             room_id=room_id, hotel_id=hotel_id
         )

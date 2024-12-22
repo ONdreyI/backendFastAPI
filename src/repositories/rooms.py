@@ -1,10 +1,8 @@
 from datetime import date
 
-from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload, joinedload
 
-from src.exceptions import ObjectNotFoundException, NoFreeRoomsException
 from src.models.rooms import RoomsOrm
 from src.repositories.base import BaseRepository
 from src.repositories.mappers.mappers import (

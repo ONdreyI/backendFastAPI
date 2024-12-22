@@ -4,7 +4,6 @@ from src.schemas.facilities import Facilities
 
 
 class RoomAddRequest(BaseModel):
-
     title: str
     description: str | None = None
     price: int
@@ -13,7 +12,6 @@ class RoomAddRequest(BaseModel):
 
 
 class RoomAdd(BaseModel):
-
     hotel_id: int
     title: str
     description: str | None = None

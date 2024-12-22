@@ -6,6 +6,7 @@ Revises: c268a4407d40
 Create Date: 2024-10-06 09:57:24.983302
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op  # noqa

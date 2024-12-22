@@ -1,21 +1,16 @@
 from datetime import date
 
-from fastapi import APIRouter, Query, Body, HTTPException
+from fastapi import APIRouter, Query, Body
 
 from src.app.dependencies import DBDep
 from src.exceptions import (
-    ObjectNotFoundException,
-    check_date_to_before_date_from,
     RoomNotFoundException,
     RoomNotFoundHTTPException,
     HotelNotFoundException,
     HotelNotFoundHTTPException,
 )
-from src.schemas.facilities import RoomFacilityAdd
 from src.schemas.rooms import (
-    RoomAdd,
     RoomAddRequest,
-    RoomPatch,
     RoomPatchRequest,
 )
 from src.services.rooms import RoomService

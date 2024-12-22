@@ -6,7 +6,6 @@ from fastapi_cache.decorator import cache
 from src.app.dependencies import PaginationDep, DBDep
 from src.exceptions import (
     ObjectNotFoundException,
-    check_date_to_before_date_from,
 )
 from src.schemas.hotels import HotelAdd, HotelPATCH
 from src.services.hotels import HotelService

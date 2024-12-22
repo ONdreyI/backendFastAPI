@@ -1,7 +1,6 @@
 from src.app.dependencies import UserIdDep
 from src.schemas.bookings import BookingAddRequest, BookingAdd
 from src.schemas.hotels import Hotel
-from src.schemas.rooms import Room
 from src.services.base import BaseService
 from src.services.rooms import RoomService
 
