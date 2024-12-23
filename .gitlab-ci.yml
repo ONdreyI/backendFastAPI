@@ -4,6 +4,7 @@ stages:
   - migrations
   - test
   - deploy
+  - cleanup
 
 
 build-job:
@@ -40,3 +41,10 @@ deploy-job:
     - docker compose -f docker-compose-ci.yml up -d
     - docker exec booking_nginx nginx -s reload
 
+cleanup-job:
+  stage: cleanup
+  script:
+    - docker system prune -af  # Удаляет все неиспользуемые контейнеры, сети, образы и тома
+    # или
+    # - docker image prune -af  # Удаляет все неиспользуемые образы
+  when: always  # Этот шаг будет выполняться всегда, независимо от результата предыдущих шагов
